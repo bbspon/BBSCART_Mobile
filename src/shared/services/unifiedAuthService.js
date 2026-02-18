@@ -6,7 +6,7 @@ const API_ENDPOINTS = {
   bbscart: {
     base: 'https://bbscart.com/api',
     login: '/auth/login',
-    signup: '/auth/signup',
+    signup: '/auth/register',
     me: '/auth/me',
   },
   globalhealth: {
@@ -136,15 +136,29 @@ export const unifiedSignup = async (appName, userData) => {
       body: JSON.stringify(payload),
     });
 
-    const data = await response.json();
+let data;
+
+const text = await response.text();
+
+try {
+  data = JSON.parse(text);
+} catch (err) {
+  console.log("❌ Non-JSON response:", text);
+  throw new Error("Server did not return valid JSON");
+}
 
     if (!response.ok) {
       throw new Error(data.message || data.error || 'Signup failed');
     }
 
-    if (!data.token) {
-      throw new Error('Token not received from server');
-    }
+   // If backend does not return token, fallback to login
+if (!data.token) {
+  return {
+    success: true,
+    requiresLogin: true,
+    user: data.user,
+  };
+}
 
     // Extract user data
     const user = data.user || {

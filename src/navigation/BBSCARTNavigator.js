@@ -73,7 +73,7 @@ function HeaderIcons({ navigation }) {
       >
         <Icon name="bell-outline" size={24} color="#FFFFFF" />
       </TouchableOpacity>
-      
+
       <TouchableOpacity
         onPress={() => navigation.navigate("Cart")}
         style={styles.iconButton}
@@ -160,83 +160,83 @@ function MainStack() {
         cardStyle: { backgroundColor: '#0B0B0C' }, // Set default background color for all screens
       }}
     >
-        <Stack.Screen
-          name="Home"
-          component={Home}
-          options={({ navigation }) => ({
-            headerTitle: () => <HeaderLogo />,
-            headerTitleAlign: "center",
-            headerStyle: { 
-              backgroundColor: '#0B0B0C',
-              height: 60,
-              elevation: 0,
-              shadowOpacity: 0,
-            },
-            headerTitleContainerStyle: {
-              left: 0,
-              right: 0,
-              justifyContent: "center",
-              alignItems: "center",
-              height: 60,
-              overflow: "visible",
-            },
-            headerRight: () => <HeaderIcons navigation={navigation} />,
-          })}
-        />
-        <Stack.Screen 
-          name="Dashboard" 
-          component={Dashboard}
-          options={{
-            title: 'Dashboard',
-            animation: 'simple_push',
-            headerStyle: { backgroundColor: '#0B0B0C' },
-            headerTintColor: '#FFFFFF',
-            headerTitleStyle: { color: '#FFFFFF', fontWeight: '600' },
-          }}
-        />
-        <Stack.Screen name="FranchiseHead" component={FranchiseHeadScreen} />
-        <Stack.Screen name="Franchisee" component={Franchisee} />
-        <Stack.Screen name="TerritoryHead" component={TerritoryHead} />
-        <Stack.Screen name="Agent" component={AgentScreen} />
-        <Stack.Screen name="AgentForm" component={AgentForm} />
-        <Stack.Screen name="Vendor" component={VendorScreen} />
-        <Stack.Screen name="VendorForm" component={VendorForm} />
-        <Stack.Screen name="BecomeAVendor" component={BecomeVendorScreen} />
-        <Stack.Screen name="CustomerBVendor" component={CustomerBVendor} />
-        <Stack.Screen name="UserAccount" component={UserAccount} />
-        <Stack.Screen name="Cart" component={CartPage} />
-        <Stack.Screen name="Notifications" component={Notifications} />
-        <Stack.Screen name="Products" component={ProductListings} />
-        <Stack.Screen name="ProductDetails" component={ProductDetails} />
-        <Stack.Screen 
-          name="ProfileSettings" 
-          component={ProfileSettingsScreen}
-          options={{
-            animation: 'simple_push', // Simpler animation for ProfileSettings
-          }}
-        />
-        <Stack.Screen name="Settings" component={AppSettingsScreen} />
-        <Stack.Screen name="Checkout" component={CheckoutPage} />
-        <Stack.Screen name="Success" component={SuccessPage} />
-        <Stack.Screen name="Orders" component={OrderHistory} />
-        <Stack.Screen name="Wishlist" component={Wishlist} />
-        <Stack.Screen name="Coupons" component={Coupons} />
-        <Stack.Screen name="Wallet" component={MyWallet} />
-        <Stack.Screen name="Payments" component={SavedCardsUPI} />
-        <Stack.Screen name="Rewards" component={RewardsScreen} />
-        <Stack.Screen name="ContactUs" component={ContactUsScreen} />
-        <Stack.Screen name="Feedback" component={FeedbackScreen} />
-        <Stack.Screen name="ChangePassword" component={ChangePassword} />
-        <Stack.Screen name="TermsOfUse" component={TermsOfUse} />
-        <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} />
-        <Stack.Screen name="CancellationPolicy" component={CancellationPolicyScreen} />
-        <Stack.Screen name="ShippingPolicy" component={ShippingPolicyScreen} />
-        <Stack.Screen name="RefundPolicy" component={RefundPolicyScreen} />
-        <Stack.Screen name="BuybackPolicy" component={BuybackPolicyScreen} />
-        <Stack.Screen name="ExchangePolicy" component={ExchangePolicyScreen} />
-        <Stack.Screen name="BankCashbackPolicy" component={BankCashbackPolicyScreen} />
-        <Stack.Screen name="SubcategoryProducts" component={SubcategoryProductsScreen} />
-      </Stack.Navigator>
+      <Stack.Screen
+        name="Home"
+        component={Home}
+        options={({ navigation }) => ({
+          headerTitle: () => <HeaderLogo />,
+          headerTitleAlign: "center",
+          headerStyle: {
+            backgroundColor: '#0B0B0C',
+            height: 60,
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+          headerTitleContainerStyle: {
+            left: 0,
+            right: 0,
+            justifyContent: "center",
+            alignItems: "center",
+            height: 60,
+            overflow: "visible",
+          },
+          headerRight: () => <HeaderIcons navigation={navigation} />,
+        })}
+      />
+      <Stack.Screen
+        name="Dashboard"
+        component={Dashboard}
+        options={{
+          title: 'Dashboard',
+          animation: 'simple_push',
+          headerStyle: { backgroundColor: '#0B0B0C' },
+          headerTintColor: '#FFFFFF',
+          headerTitleStyle: { color: '#FFFFFF', fontWeight: '600' },
+        }}
+      />
+      <Stack.Screen name="FranchiseHead" component={FranchiseHeadScreen} />
+      <Stack.Screen name="Franchisee" component={Franchisee} />
+      <Stack.Screen name="TerritoryHead" component={TerritoryHead} />
+      <Stack.Screen name="Agent" component={AgentScreen} />
+      <Stack.Screen name="AgentForm" component={AgentForm} />
+      <Stack.Screen name="Vendor" component={VendorScreen} />
+      <Stack.Screen name="VendorForm" component={VendorForm} />
+      <Stack.Screen name="BecomeAVendor" component={BecomeVendorScreen} />
+      <Stack.Screen name="CustomerBVendor" component={CustomerBVendor} />
+      <Stack.Screen name="UserAccount" component={UserAccount} />
+      <Stack.Screen name="Cart" component={CartPage} />
+      <Stack.Screen name="Notifications" component={Notifications} />
+      <Stack.Screen name="Products" component={ProductListings} />
+      <Stack.Screen name="ProductDetails" component={ProductDetails} />
+      <Stack.Screen
+        name="ProfileSettings"
+        component={ProfileSettingsScreen}
+        options={{
+          animation: 'simple_push', // Simpler animation for ProfileSettings
+        }}
+      />
+      <Stack.Screen name="Settings" component={AppSettingsScreen} />
+      <Stack.Screen name="Checkout" component={CheckoutPage} />
+      <Stack.Screen name="Success" component={SuccessPage} />
+      <Stack.Screen name="Orders" component={OrderHistory} />
+      <Stack.Screen name="Wishlist" component={Wishlist} />
+      <Stack.Screen name="Coupons" component={Coupons} />
+      <Stack.Screen name="Wallet" component={MyWallet} />
+      <Stack.Screen name="Payments" component={SavedCardsUPI} />
+      <Stack.Screen name="Rewards" component={RewardsScreen} />
+      <Stack.Screen name="ContactUs" component={ContactUsScreen} />
+      <Stack.Screen name="Feedback" component={FeedbackScreen} />
+      <Stack.Screen name="ChangePassword" component={ChangePassword} />
+      <Stack.Screen name="TermsOfUse" component={TermsOfUse} />
+      <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} />
+      <Stack.Screen name="CancellationPolicy" component={CancellationPolicyScreen} />
+      <Stack.Screen name="ShippingPolicy" component={ShippingPolicyScreen} />
+      <Stack.Screen name="RefundPolicy" component={RefundPolicyScreen} />
+      <Stack.Screen name="BuybackPolicy" component={BuybackPolicyScreen} />
+      <Stack.Screen name="ExchangePolicy" component={ExchangePolicyScreen} />
+      <Stack.Screen name="BankCashbackPolicy" component={BankCashbackPolicyScreen} />
+      <Stack.Screen name="SubcategoryProducts" component={SubcategoryProductsScreen} />
+    </Stack.Navigator>
   );
 }
 
@@ -325,20 +325,20 @@ export default function BBSCARTNavigator() {
 
 /* ---------------- STYLES ---------------- */
 const styles = StyleSheet.create({
-  logoContainer: {
-    width: "100%",
-    height: 60,
-    justifyContent: "center",
-    alignItems: "center",
-    overflow: "visible",
-    position: "relative",
-  },
-  headerLogo: {
-    width: 350,
-    height: 150,
-    marginTop: -45,
-    marginBottom: -45,
-  },
+logoContainer: {
+  justifyContent: "center",
+  alignItems: "center",
+  width: 260,          // larger visual space
+  height: 60,          // must match header height
+  overflow: "visible", // CRITICAL
+},
+
+headerLogo: {
+  width: 240,          // increase logo size
+  height: 120,
+  resizeMode: "contain",
+},
+
   headerIconsContainer: {
     flexDirection: "row",
     alignItems: "center",

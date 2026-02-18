@@ -242,7 +242,7 @@ const handleVerifyOtp = async () => {
       <View style={styles.inputGroup}>
         <Text style={styles.label}>Phone Number</Text>
         <TextInput
-          placeholder="Enter phone number (e.g., +1234567890 or 1234567890)"
+          placeholder="Enter phone number (e.g. +99669696969)"
           value={phone}
           onChangeText={(text) => {
             // Allow + at start for country code, then only digits

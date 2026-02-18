@@ -107,55 +107,51 @@ const Registration = () => {
 
     return true;
   };
+const handleRegister = async () => {
+  if (!validateRegister()) return;
 
-  const handleRegister = async () => {
-    if (!validateRegister()) return;
-
-    const userData = {
-      name: name.trim(),
-      email: email.trim(),
-      phone: phone.trim(),
-      password,
-      confirmPassword,
-      role: 'customer',
-    };
-
-    try {
-      setIsLoading(true);
-
-      // Use unified signup service
-      const result = await unifiedSignup('bbscart', userData);
-
-      if (!result.success) {
-        throw new Error(result.error || 'Registration failed');
-      }
-
-      // Login to unified auth context (this will sync to all apps)
-      await unifiedLoginAction(result.token, result.user, 'bbscart');
-
-      // Also update local BBSCART auth context for backward compatibility
-      localLogin();
-
-      Alert.alert('Success', 'Registration successful! You are now signed in.');
-
-      setName('');
-      setPhone('');
-      setEmail('');
-      setPassword('');
-      setConfirmPassword('');
-
-      // Navigate to Home screen since user is now authenticated
-      // The navigator will automatically show MainStack due to unified auth state
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'Home' }],
-      });
-    } catch (error) {
-      Alert.alert('Error', error.message);
-    } finally {
-      setIsLoading(false);
-    }
+  const userData = {
+    name: name.trim(),
+    email: email.trim(),
+    phone: phone.trim(),
+    password,
+    confirmPassword,
+    role: 'customer',
   };
+
+  try {
+    setIsLoading(true);
+
+    const result = await unifiedSignup('bbscart', userData);
+
+    if (!result.success) {
+      throw new Error(result.error || 'Registration failed');
+    }
+
+    Alert.alert(
+      'Success',
+      'Registration successful. Please sign in.',
+      [
+        {
+          text: 'OK',
+          onPress: () => navigation.navigate('SignIn'),
+        },
+      ]
+    );
+
+    setName('');
+    setPhone('');
+    setEmail('');
+    setPassword('');
+    setConfirmPassword('');
+
+  } catch (error) {
+    Alert.alert('Error', error.message);
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   return (
     <KeyboardAvoidingView
@@ -194,7 +190,7 @@ const Registration = () => {
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Phone Number</Text>
           <TextInput
-            placeholder="Enter phone number (e.g., +1234567890 or 1234567890)"
+            placeholder="Enter phone number (e.g., 8988588858)"
             value={phone}
             onChangeText={(text) => {
               // Allow + at start for country code, then only digits
@@ -299,7 +295,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     backgroundColor: '#f1f3f6',
     padding: 20,
-    margin: 20,
+    // margin: 20,
     justifyContent: 'center',
   },
   header: {
