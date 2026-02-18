@@ -1,0 +1,105 @@
+﻿==== android/app/build.gradle(.kts) ====
+plugins {
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
+    id("com.facebook.react")
+}
+
+def hermesEnabled = project.hasProperty("hermesEnabled") ? project.hermesEnabled.toBoolean() : false
+def jscFlavor = 'io.github.react-native-community:jsc-android:245459.0'
+def enableProguardInReleaseBuilds = false
+
+android {
+    namespace "com.frontend"
+    compileSdk rootProject.ext.compileSdkVersion
+    ndkVersion rootProject.ext.ndkVersion
+
+    externalNativeBuild {
+        cmake {
+            version "3.22.1"
+        }
+    }
+
+    defaultConfig {
+        applicationId "com.frontend"
+        minSdk rootProject.ext.minSdkVersion
+        targetSdk rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+        manifestPlaceholders = [usesCleartextTraffic: "true"]
+
+        externalNativeBuild {
+            cmake {
+                cppFlags "-std=c++17"
+            }
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions { jvmTarget = "17" }
+
+    signingConfigs {
+        debug {
+            storeFile file('debug.keystore')
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+        }
+    }
+
+    buildTypes {
+        debug { signingConfig signingConfigs.debug }
+        release {
+            signingConfig signingConfigs.debug
+            minifyEnabled enableProguardInReleaseBuilds
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        }
+    }
+
+    packaging {
+        resources {
+            excludes += [
+                "META-INF/androidx.customview_customview.version",
+                "META-INF/androidx.*",
+                "META-INF/com.android.support.*",
+                "attr/actionBarSize",
+                "values/values.xml"
+            ]
+        }
+    }
+}
+
+dependencies {
+    implementation("com.facebook.react:react-android:0.80.2")
+    implementation "androidx.appcompat:appcompat:1.6.1"
+
+    if (hermesEnabled) {
+        implementation("hermes-engine:0.12.3")
+    } else {
+        implementation jscFlavor
+    }   
+}
+
+// Autolinked native modules
+/*def autolinkingFile = rootProject.file("build/generated/autolinking/autolinking.json")
+if (autolinkingFile.exists()) {
+    def json = new groovy.json.JsonSlurper().parseText(autolinkingFile.text)
+    if (json?.dependencies) {
+        json.dependencies.each { name, dep ->
+            def androidCfg = dep?.platforms?.android
+            if (androidCfg?.sourceDir) {
+                def srcDir = file(androidCfg.sourceDir)
+                def matching = rootProject.subprojects.find { it.projectDir.absolutePath == srcDir.absolutePath }
+                if (matching) {
+                    dependencies {
+                        implementation project(path: matching.path)
+                    }
+                }
+            }
+        }
+    }
+}*/

@@ -1,0 +1,20 @@
+/node_modules
+.env
+dist/
+build/
+# Gradle
+.gradle/
+android/.gradle/
+
+# Build folders
+android/app/build/
+
+# APK files
+*.apk
+*.aab
+
+# Logs
+*.log
+
+# Environment
+.env

@@ -1,0 +1,11 @@
+﻿==== gradle-wrapper.properties ====
+# Gradle Wrapper Properties for Unified React Native App
+distributionBase=GRADLE_USER_HOME
+distributionPath=wrapper/dists
+distributionUrl=https\://services.gradle.org/distributions/gradle-8.7-all.zip
+zipStoreBase=GRADLE_USER_HOME
+zipStorePath=wrapper/dists
+
+# Network and validation settings
+networkTimeout=10000
+validateDistributionUrl=true

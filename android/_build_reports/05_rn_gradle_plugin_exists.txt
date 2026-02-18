@@ -1,0 +1,21 @@
+﻿==== gradle-plugin folder existence ====
+FOUND: D:\Merge\BBS ONEAPP\UnifiedApp\node_modules\@react-native\gradle-plugin
+
+Name                       Length LastWriteTime      
+----                       ------ -------------      
+.gradle                           14-02-2026 16:20:07
+.kotlin                           14-02-2026 16:20:24
+gradle                            14-02-2026 16:16:11
+react-native-gradle-plugin        14-02-2026 20:25:30
+settings-plugin                   14-02-2026 16:20:07
+shared                            14-02-2026 16:20:23
+shared-testutil                   14-02-2026 16:16:13
+build.gradle.kts           599    14-02-2026 16:16:13
+gradlew                    8733   14-02-2026 16:16:11
+gradlew.bat                3134   14-02-2026 16:16:11
+package.json               892    14-02-2026 16:16:11
+README.md                  719    14-02-2026 16:16:13
+settings.gradle.kts        526    14-02-2026 16:16:13
+
+
+

@@ -1,0 +1,81 @@
+﻿==== async-storage android/build.gradle (first 80 lines with numbers) ====
+   1: configurations {
+   2:     compileClasspath
+   3: }
+   4: 
+   5: buildscript {
+   6:     apply from: "config.gradle"
+   7:     def kotlinVersion = ext.AsyncStorageConfig.kotlinVersion
+   8:     def kspVersion = ext.AsyncStorageConfig.kspVersion
+   9: 
+  10:     repositories {
+  11:         mavenCentral()
+  12:         google()
+  13:     }
+  14:     dependencies {
+  15:         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+  16:         classpath "com.google.devtools.ksp:symbol-processing-gradle-plugin:$kspVersion"
+  17:     }
+  18: }
+  19: 
+  20: 
+  21: apply plugin: 'com.android.library'
+  22: apply from: 'config.gradle'
+  23: 
+  24: boolean isNewArchitectureEnabled = ext.AsyncStorageConfig.isNewArchitectureEnabled
+  25: boolean useNextStorage = ext.AsyncStorageConfig.useNextStorage
+  26: 
+  27: logger.info("[AsyncStorage] Config used: {}", ext.AsyncStorageConfig)
+  28: 
+  29: if (useNextStorage) {
+  30:     apply plugin: 'com.google.devtools.ksp'
+  31:     apply plugin: 'kotlin-android'
+  32:     apply from: './testresults.gradle'
+  33: }
+  34: 
+  35: if (isNewArchitectureEnabled) {
+  36:     apply plugin: "com.facebook.react"
+  37: }
+  38: 
+  39: android {
+  40:     def agpVersion = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION
+  41:     if (agpVersion.tokenize('.')[0].toInteger() >= 7) {
+  42:         namespace "com.reactnativecommunity.asyncstorage"
+  43:         buildFeatures {
+  44:             buildConfig true
+  45:         }
+  46:     }
+  47: 
+  48:     compileSdkVersion project.ext.AsyncStorageConfig.compileSdkVersion
+  49:     // Used to override the NDK path/version by allowing users to customize
+  50:     // the NDK path/version from their root project (e.g. for M1 support)
+  51:     if (rootProject.hasProperty("ndkPath")) {
+  52:         ndkPath rootProject.ext.ndkPath
+  53:     }
+  54:     if (rootProject.hasProperty("ndkVersion")) {
+  55:         ndkVersion rootProject.ext.ndkVersion
+  56:     }
+  57: 
+  58: 
+  59:     defaultConfig {
+  60:         minSdkVersion project.ext.AsyncStorageConfig.minSdkVersion
+  61:         targetSdkVersion project.ext.AsyncStorageConfig.targetSdkVersion
+  62:         buildConfigField "Long", "AsyncStorage_db_size", "${project.ext.AsyncStorageConfig.databaseSizeMB}L"
+  63:         buildConfigField "boolean", "AsyncStorage_useDedicatedExecutor", "${project.ext.AsyncStorageConfig.useDedicatedExecutor}"
+  64:         buildConfigField "boolean", "AsyncStorage_useNextStorage", "${useNextStorage}"
+  65:         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", "${isNewArchitectureEnabled}"
+  66:     }
+  67:     lintOptions {
+  68:         abortOnError false
+  69:     }
+  70: 
+  71:     if (useNextStorage) {
+  72:         testOptions {
+  73:             unitTests {
+  74:                 returnDefaultValues = true
+  75:                 includeAndroidResources = true
+  76:             }
+  77:         }
+  78:     }
+  79: 
+  80:     sourceSets.main {
