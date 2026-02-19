@@ -18,7 +18,8 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { showMessage } from "react-native-flash-message";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
-
+import Geolocation from "@react-native-community/geolocation";
+import { PermissionsAndroid } from "react-native";
 const API_URL = "https://bbscart.com";
 
 // Real API functions - replaced mock functions
@@ -704,27 +705,52 @@ export default function TerritoryHeadForm({ navigation: propNavigation }) {
     });
   };
 
-  const fetchLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          setOutlet((prev) => ({ ...prev, lat: String(latitude), lng: String(longitude) }));
-          Alert.alert(
-            "Location Fetched",
-            `Latitude: ${latitude}, Longitude: ${longitude}`
-          );
-        },
-        (error) => {
-          console.error("Error fetching location:", error);
-          Alert.alert("Error", "Failed to fetch location. Please enable location services.");
-        },
-        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+const fetchLocation = async () => {
+  try {
+    if (Platform.OS === "android") {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
       );
-    } else {
-      Alert.alert("Error", "Geolocation is not supported on this device.");
+
+      if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+        Alert.alert("Permission Denied", "Location permission is required");
+        return;
+      }
     }
-  };
+
+    Geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+
+        setOutlet((prev) => ({
+          ...prev,
+          lat: String(latitude),
+          lng: String(longitude),
+        }));
+
+        showMessage({
+          type: "success",
+          message: "Location fetched successfully",
+        });
+      },
+      (error) => {
+        console.log("Location error:", error);
+
+        Alert.alert(
+          "Location Error",
+          "Unable to fetch location. Please enable GPS."
+        );
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 15000,
+        maximumAge: 10000,
+      }
+    );
+  } catch (err) {
+    console.log("fetchLocation crash:", err);
+  }
+};
 
   const submitTerritoryApplication = async () => {
     const tid = territoryHeadId || (await AsyncStorage.getItem("territoryHeadId"));

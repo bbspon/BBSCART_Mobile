@@ -1,147 +1,197 @@
-import React from 'react';
-import { View, Text, FlatList, Image, TouchableOpacity, StyleSheet } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  ActivityIndicator,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 
-// Mock Order Data
-const orders = [
-  {
-    id: '1',
-    productName: 'Samsung Galaxy M14 5G',
-    productImage: 'https://purepng.com/public/uploads/large/samsung-phone-270.png',
-    orderDate: '15 Aug 2025',
-    status: 'Delivered',
-  },
-  {
-    id: '2',
-    productName: 'Nike Running Shoes',
-    productImage: 'https://freepngimg.com/download/running_shoes/15-nike-running-shoes-png-image.png',
-    orderDate: '12 Aug 2025',
-    status: 'Shipped',
-  },
-  {
-    id: '3',
-    productName: 'Sony WH-CH520 Headphones',
-    productImage: 'https://m.media-amazon.com/images/I/61l+sz394PL._SL1000_.jpg',
-    orderDate: '05 Aug 2025',
-    status: 'Cancelled',
-  },
-];
+const API_BASE = "https://bbscart.com/api";
 
-const OrderHistory = ({ navigation }) => {
+export default function OrderHistory({ navigation }) {
   const insets = useSafeAreaInsets();
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadOrders();
+  }, []);
+
+  const loadOrders = async () => {
+    try {
+      setLoading(true);
+
+ const unifiedRaw = await AsyncStorage.getItem("UNIFIED_AUTH");
+
+if (!unifiedRaw) {
+  setOrders([]);
+  return;
+}
+
+const unified = JSON.parse(unifiedRaw);
+const userId = unified?.user?._id;
+
+if (!userId) {
+  setOrders([]);
+  return;
+}
+
+const res = await axios.get(
+  `${API_BASE}/orders/user/${userId}`,
+  {
+    headers: {
+      Authorization: `Bearer ${unified.token}`,
+    },
+  }
+);
+
+const sorted = (res.data?.orders || []).sort(
+  (a, b) => new Date(b.created_at) - new Date(a.created_at)
+);
+
+setOrders(sorted);
+
+    } catch (err) {
+      console.log("Orders fetch error:", err?.response?.data || err.message);
+      setOrders([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const renderOrder = ({ item }) => (
     <View style={styles.card}>
-      <Image source={{ uri: item.productImage }} style={styles.productImage} />
+      <Image
+        source={{ uri: item?.items?.[0]?.image }}
+        style={styles.productImage}
+      />
+
       <View style={styles.details}>
-        <Text style={styles.productName}>{item.productName}</Text>
-        <Text style={styles.orderDate}>Ordered on {item.orderDate}</Text>
-        <Text
-          style={[
-            styles.status,
-            item.status === 'Delivered'
-              ? styles.delivered
-              : item.status === 'Shipped'
-              ? styles.shipped
-              : styles.cancelled,
-          ]}
-        >
-          {item.status}
+        <Text style={styles.productName}>
+          {item?.items?.[0]?.name}
+        </Text>
+
+        <Text style={styles.orderDate}>
+          Ordered on {new Date(item.created_at).toDateString()}
+        </Text>
+
+        <Text style={styles.price}>
+          ₹{item?.totalAmount}
         </Text>
 
         <TouchableOpacity
           style={styles.detailsButton}
-          onPress={() => navigation.navigate('ProductDetails', { product: item })}
+          onPress={() =>
+            navigation.navigate("OrderDetails", {
+              orderId: item._id,
+            })
+          }
         >
-          <Text style={styles.detailsButtonText}>View Details</Text>
+          <Text style={styles.detailsButtonText}>
+            View Details
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 
+  if (loading) {
+    return (
+      <View style={styles.loader}>
+        <ActivityIndicator size="large" color="#fb641b" />
+      </View>
+    );
+  }
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingBottom: insets.bottom }]}>
       <Text style={styles.heading}>My Orders</Text>
-      <FlatList
-        data={orders}
-        keyExtractor={(item) => item.id}
-        renderItem={renderOrder}
-        contentContainerStyle={{ paddingBottom: 20 + insets.bottom }}
-      />
+
+      {orders.length === 0 ? (
+        <View style={styles.emptyBox}>
+          <Text style={styles.emptyText}>No orders yet</Text>
+        </View>
+      ) : (
+        <FlatList
+          data={orders}
+          renderItem={renderOrder}
+          keyExtractor={(item) => item._id}
+          contentContainerStyle={{ paddingBottom: 80 }}
+        />
+      )}
     </View>
   );
-};
+}
 
-// Styles (Flipkart-like UI)
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f2f3f5',
-    padding: 10,
+    backgroundColor: "#f2f2f2",
   },
   heading: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 15,
-    color: '#000',
+    fontSize: 20,
+    fontWeight: "bold",
+    margin: 15,
   },
   card: {
-    flexDirection: 'row',
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    marginBottom: 12,
-    padding: 10,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    flexDirection: "row",
+    backgroundColor: "#fff",
+    marginHorizontal: 12,
+    marginVertical: 8,
+    padding: 15,
+    borderRadius: 10,
     elevation: 2,
   },
   productImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 6,
-    marginRight: 12,
+    width: 90,
+    height: 90,
+    borderRadius: 8,
   },
   details: {
     flex: 1,
-    justifyContent: 'center',
+    marginLeft: 12,
+    justifyContent: "space-between",
   },
   productName: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 4,
-    color: '#222',
+    fontSize: 15,
+    fontWeight: "600",
   },
   orderDate: {
-    fontSize: 14,
-    color: '#555',
-    marginBottom: 4,
+    fontSize: 13,
+    color: "#777",
+    marginTop: 4,
   },
-  status: {
-    fontSize: 14,
-    fontWeight: '600',
-    marginBottom: 8,
-  },
-  delivered: {
-    color: 'green',
-  },
-  shipped: {
-    color: '#ff9800',
-  },
-  cancelled: {
-    color: 'red',
+  price: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginTop: 6,
   },
   detailsButton: {
-    backgroundColor: '#007BFF',
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 6,
-    alignSelf: 'flex-start',
+    marginTop: 10,
   },
   detailsButtonText: {
-    color: '#fff',
-    fontWeight: '600',
-    fontSize: 14,
+    color: "#2874F0",
+    fontSize: 13,
+    fontWeight: "500",
+  },
+  loader: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  emptyBox: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  emptyText: {
+    fontSize: 15,
+    color: "#777",
   },
 });
-
-export default OrderHistory;

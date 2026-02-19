@@ -39,13 +39,12 @@ export default function ContactUsScreen() {
       setSubmitting(true);
 
       // Send to backend API (matching website ContactPage.jsx)
-      const response = await axios.post(`${API_BASE}/contact`, {
-        name: name.trim(),
-        phone: phone.trim(),
-        email: email.trim(),
-        subject: subject || 'general',
-        message: message.trim(),
-      }, {
+   const response = await axios.post(`${API_BASE}/contact/send-message`, {
+  name: name.trim(),
+  email: email.trim(),
+  message: message.trim(),
+},
+ {
         headers: { 'Content-Type': 'application/json' },
       });
 
@@ -129,7 +128,7 @@ export default function ContactUsScreen() {
           <Entypo name="location-pin" size={40} color="red" />
           <Text style={styles.cardTitle}>Address</Text>
           <Text style={styles.address}>
-          Floor, 1st, 5, 2nd Cross, Bharathy Street, Anna Nagar, Puducherry, 605005
+          Floor, 1st, 7, 2nd Cross, Bharathy Street, Anna Nagar, Puducherry, 605005
           </Text>
         </View>
       </View>

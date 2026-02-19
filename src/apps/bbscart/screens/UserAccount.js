@@ -125,11 +125,11 @@ const handleLogout = async () => {
           text="Wishlist"
           onPress={() => handleNavigation("Wishlist")}
         />
-        <MenuItem
+        {/* <MenuItem
           emoji="🏷️"
           text="Coupons"
           onPress={() => handleNavigation("Coupons")}
-        />
+        /> */}
       </View>
 
       {/* Payments Section */}
@@ -170,21 +170,21 @@ const handleLogout = async () => {
           text="Contact Us"
           onPress={() => handleNavigation("ContactUs")}
         />
-        <MenuItem
+        {/* <MenuItem
           emoji="🔒"
           text="Change Password"
           onPress={() => handleNavigation("ChangePassword")}
-        />
+        /> */}
       </View>
 
       {/* Support Section */}
       <View style={styles.menuSection}>
         <Text style={styles.sectionTitle}>Support</Text>
-        <MenuItem
+        {/* <MenuItem
           emoji="❓"
           text="Help Center"
           onPress={() => handleNavigation("Help")}
-        />
+        /> */}
         <MenuItem
           emoji="📜"
           text="Terms Of Use"
