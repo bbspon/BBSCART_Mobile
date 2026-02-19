@@ -16,7 +16,8 @@ import { useCart } from "../contexts/CartContext";
 export default function CartPage() {
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
-  const { items, updateQty, removeItem } = useCart();
+  
+const { items, updateQty, removeItem, addItem } = useCart();
 
   const [savedItems, setSavedItems] = useState([]);
 
@@ -36,17 +37,35 @@ export default function CartPage() {
     if (item && item.qty > 1) updateQty(id, item.qty - 1);
   };
 
-  const saveForLater = (item) => {
-    setSavedItems((prev) => [...prev, item]);
-    removeItem(item.productId);
-  };
+const saveForLater = (item) => {
+  Alert.alert(
+    "Save for later",
+    "Move item to Saved for Later?",
+    [
+      { text: "Cancel" },
+      {
+        text: "Yes",
+        onPress: () => {
+          setSavedItems(prev => {
+            const exists = prev.find(i => i.productId === item.productId);
+            if (exists) return prev;
+            return [...prev, item];
+          });
 
-  const moveToCart = (item) => {
-    setSavedItems((prev) =>
-      prev.filter((i) => i.productId !== item.productId)
-    );
-    updateQty(item.productId, item.qty || 1);
-  };
+          removeItem(item.productId);
+        }
+      }
+    ]
+  );
+};
+
+const moveToCart = (item) => {
+  addItem(item, item.qty || 1);
+
+  setSavedItems(prev =>
+    prev.filter(i => i.productId !== item.productId)
+  );
+};
 
   const totals = useMemo(() => {
     const total = cartItems.reduce(
