@@ -30,8 +30,8 @@ const UserAccount = ({ navigation }) => {
   useEffect(() => {
     const loadUser = async () => {
       try {
-        const token = await AsyncStorage.getItem("THIAWORLD_TOKEN");
-        const userStr = await AsyncStorage.getItem("THIAWORLD_USER");
+        const token = await AsyncStorage.getItem("UNIFIED_AUTH");
+        const userStr = await AsyncStorage.getItem("auth_user");
 
         if (!token) {
           navigation.replace("SignIn");

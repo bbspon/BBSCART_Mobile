@@ -244,7 +244,7 @@ export default function SearchScreen({ route }) {
       </View>
 
       {/* Content */}
-      {loading && !hasSearched ? (
+      {loading ? (
         <View style={styles.centerContainer}>
           <ActivityIndicator size="large" color="#B8860B" />
           <Text style={styles.loadingText}>Searching...</Text>

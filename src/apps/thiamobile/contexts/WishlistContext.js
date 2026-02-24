@@ -47,12 +47,12 @@ export const WishlistProvider = ({ children }) => {
             const ids = new Set(
                 items.map((item) => {
                     // Handle different item structures
-                    const productId = item.productId?._id || 
-                                    item.productId || 
-                                    item.product?._id ||
-                                    item.product ||
-                                    item._id ||
-                                    item.id;
+                    const productId = item.productId?._id ||
+                        item.productId ||
+                        item.product?._id ||
+                        item.product ||
+                        item._id ||
+                        item.id;
                     return String(productId); // Ensure string for consistency
                 }).filter(Boolean) // Remove any null/undefined values
             );
@@ -86,19 +86,19 @@ export const WishlistProvider = ({ children }) => {
     const toggleWishlist = async (productId) => {
         // ✅ Ensure productId is string for consistency
         const productIdStr = String(productId);
-        
+
         // ✅ Save current state before making changes (for error rollback)
         const wasWishlisted = wishlistIds.has(productIdStr);
-        
+
         try {
             // ✅ Check for token (try both THIAWORLD_TOKEN and bbsUser)
-            const token = await AsyncStorage.getItem('THIAWORLD_TOKEN');
-            const bbsUserRaw = await AsyncStorage.getItem('bbsUser');
+            const token = await AsyncStorage.getItem('UNIFIED_AUTH');
+            const bbsUserRaw = await AsyncStorage.getItem('auth_user');
             const hasToken = token || (bbsUserRaw && JSON.parse(bbsUserRaw)?.token);
 
             if (!hasToken) {
                 // User not logged in - could show alert here if needed
-                console.log('User not logged in - cannot add to wishlist');
+                Alert.alert("Login Required", "Please login to use wishlist");
                 return;
             }
 
@@ -115,7 +115,7 @@ export const WishlistProvider = ({ children }) => {
 
             // Call API to toggle wishlist
             await toggleWishlistAPI(productIdStr);
-            
+
             // ✅ Wait a bit before reloading to give backend time to update
             // Then reload wishlist to ensure sync with backend
             setTimeout(async () => {
@@ -126,7 +126,7 @@ export const WishlistProvider = ({ children }) => {
                     // If reload fails, keep the optimistic update
                 }
             }, 500); // 500ms delay
-            
+
         } catch (err) {
             console.log('Wishlist toggle error', err);
             // ✅ Revert optimistic update on error
@@ -141,7 +141,7 @@ export const WishlistProvider = ({ children }) => {
                 }
                 return updated;
             });
-            
+
             // Don't reload on error - keep current state
         }
     };
@@ -151,6 +151,7 @@ export const WishlistProvider = ({ children }) => {
             value={{
                 wishlistIds,
                 isWishlisted,
+                wishlistCount: wishlistIds.size,
                 toggleWishlist,
                 loading,
                 reloadWishlist: loadWishlist,

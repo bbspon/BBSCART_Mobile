@@ -11,15 +11,16 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '../contexts/ThemeContext';
 import Icon from 'react-native-vector-icons/Ionicons';
-
+import { CommonActions } from '@react-navigation/native';
+import { useUnifiedAuth } from '../../../shared/contexts/UnifiedAuthContext';
 const CustomDrawer = ({ navigation, state }) => {
   const { colors, isDark } = useTheme();
   const [user, setUser] = useState({ name: '', email: '' });
   const [activeRoute, setActiveRoute] = useState('Home');
-
+const { logout } = useUnifiedAuth();
   const loadUser = async () => {
     try {
-      const userStr = await AsyncStorage.getItem('THIAWORLD_USER');
+      const userStr = await AsyncStorage.getItem('UNIFIED_AUTH');
       if (userStr) {
         const cachedUser = JSON.parse(userStr);
         setUser({
@@ -53,36 +54,33 @@ const CustomDrawer = ({ navigation, state }) => {
     }
   }, [navigation, state]);
 
-  const handleLogout = async () => {
-    Alert.alert(
-      'Logout',
-      'Are you sure you want to logout?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Logout',
-          style: 'destructive',
-          onPress: async () => {
-            await AsyncStorage.removeItem('THIAWORLD_TOKEN');
-            await AsyncStorage.removeItem('THIAWORLD_USER');
-            // Navigate to parent stack navigator
-            const parent = navigation.getParent();
-            if (parent) {
-              parent.reset({
+const handleLogout = () => {
+  Alert.alert(
+    'Logout',
+    'Are you sure you want to logout?',
+    [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Logout',
+        style: 'destructive',
+        onPress: async () => {
+          const result = await logout();
+
+          if (result.success) {
+            navigation.dispatch(
+              CommonActions.reset({
                 index: 0,
-                routes: [{ name: 'Welcome' }],
-              });
-            } else {
-              navigation.reset({
-                index: 0,
-                routes: [{ name: 'Welcome' }],
-              });
-            }
-          },
+                routes: [{ name: 'Login' }], // ✅ BBSCART Login
+              })
+            );
+          } else {
+            Alert.alert('Error', 'Logout failed');
+          }
         },
-      ]
-    );
-  };
+      },
+    ]
+  );
+};
 
   const drawerItems = [
     { key: 'Home', label: 'Home', icon: 'home-outline', screen: 'Home' },

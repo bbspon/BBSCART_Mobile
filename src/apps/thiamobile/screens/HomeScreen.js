@@ -17,7 +17,6 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Cart from '../assets/icons/cart.png';
-import Bell from '../assets/icons/notification.png';
 import ThiaworldLogo from '../assets/thiaworldlogo.png';
 import { useCart } from '../contexts/CartContext';
 // ✅ Removed drawer imports - drawer requires reanimated
@@ -103,16 +102,16 @@ const useMidnightCountdown = () => {
 // ------------------------------
 // Header with Drawer Button
 // ------------------------------
-const Header = ({ navigation, cartCount, onSearchPress, onCartPress, onNotifPress }) => {
+const Header = ({ navigation, cartCount, wishlistCount, onSearchPress, onCartPress, onWishlistPress }) => {
   const { colors } = useTheme();
-  
+
   return (
     <View style={styles.headerContainer}>
       {/* Logo Row - Top */}
       <View style={styles.logoRow}>
-        <Image 
-          source={ThiaworldLogo} 
-          style={styles.logo} 
+        <Image
+          source={ThiaworldLogo}
+          style={styles.logo}
           resizeMode="contain"
         />
       </View>
@@ -120,8 +119,8 @@ const Header = ({ navigation, cartCount, onSearchPress, onCartPress, onNotifPres
       {/* Navigation Row - Bottom */}
       <View style={styles.navRow}>
         {/* Drawer Menu Button */}
-        <TouchableOpacity 
-          style={styles.iconWrapper} 
+        <TouchableOpacity
+          style={styles.iconWrapper}
           onPress={() => navigation?.openDrawer?.()}
         >
           <Icon name="menu" size={24} color={colors.text} />
@@ -138,11 +137,13 @@ const Header = ({ navigation, cartCount, onSearchPress, onCartPress, onNotifPres
         </TouchableOpacity>
 
         {/* Notification Icon */}
-        <TouchableOpacity style={styles.iconWrapper} onPress={onNotifPress}>
-          <Image source={Bell} style={styles.icon} />
-          <View style={styles.badge}>
-            <Text style={styles.badgeText}>3</Text>
-          </View>
+        <TouchableOpacity style={styles.iconWrapper} onPress={onWishlistPress}>
+          <Icon name="heart-outline" size={22} color={colors.text} />
+          {wishlistCount > 0 && (
+            <View style={styles.badge}>
+              <Text style={styles.badgeText}>{wishlistCount}</Text>
+            </View>
+          )}
         </TouchableOpacity>
 
         {/* Cart Icon */}
@@ -350,7 +351,7 @@ const TrustStrip = ({ navigation }) => {
       ]}
     >
       <TrustItem emoji="📈" text="Daily Rate" onPress={() => navigation.navigate('Ratings')} />
-      <TrustItem emoji="🏛️" text="Dashboard" onPress={() => navigation.navigate('Dashboard')} />
+      {/* <TrustItem emoji="🏛️" text="Dashboard" onPress={() => navigation.navigate('Dashboard')} /> */}
       <TrustItem emoji="🔒" text="ThiaSecurePlan" onPress={() => navigation.navigate('ThiaSecurePlan')} />
       <TrustItem emoji="👤" text="User Account" onPress={() => navigation.navigate('Account')} />
       <TrustItem emoji="💎" text="About Us" onPress={() => navigation.navigate('AboutUs')} />
@@ -365,7 +366,7 @@ export default function HomeScreen({ navigation }) {
   const insets = useSafeAreaInsets();
   const { cartCount, cartReady } = useCart();
   const { colors, isDark } = useTheme();
-
+const { wishlistCount } = useWishlist();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
@@ -475,7 +476,7 @@ export default function HomeScreen({ navigation }) {
   if (error) {
     return (
       <SafeAreaView style={dynamicStyles.container}>
-        <Header navigation={navigation} onSearchPress={() => navigate('Search')} onCartPress={() => navigate('Cart')} onNotifPress={() => navigate('Notifications')} />
+        <Header navigation={navigation} onSearchPress={() => navigate('Search')} onCartPress={() => navigate('Cart')}  onWishlistPress={() => navigate('Wishlist')}/>
         <View style={styles.errorBox}>
           <Text style={[styles.errorText, { color: colors.text }]}>Something went wrong. Please try again.</Text>
           <TouchableOpacity style={styles.retryBtn} onPress={() => setError(null)}>
@@ -496,9 +497,11 @@ export default function HomeScreen({ navigation }) {
         <Header
           navigation={navigation}
           cartCount={cartCount}
+          wishlistCount={wishlistCount} 
           onSearchPress={() => navigate('Search')}
           onCartPress={() => navigate('Cart')}
-          onNotifPress={() => navigate('Notifications')}
+            onWishlistPress={() => navigate('Wishlist')}  // ✅ ADD
+
         />
 
         <HeroCarousel banners={BANNERS} onBannerPress={onBannerPress} />

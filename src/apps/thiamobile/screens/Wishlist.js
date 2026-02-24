@@ -16,7 +16,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { useCart } from "../contexts/CartContext";
-
+import { useWishlist } from "../contexts/WishlistContext";
 const API_BASE = "https://thiaworld.bbscart.com/api";
 
 export default function JewelryWishlist({ navigation }) {
@@ -26,7 +26,7 @@ export default function JewelryWishlist({ navigation }) {
   const [selectedIds, setSelectedIds] = useState(new Set());
   const [selectMode, setSelectMode] = useState(false);
   const [compareVisible, setCompareVisible] = useState(false);
-
+const { reloadWishlist } = useWishlist();
   // ✅ Add focus listener to refresh wishlist when screen is focused
   useEffect(() => {
     const unsubscribe = navigation?.addListener?.('focus', () => {
@@ -112,6 +112,7 @@ export default function JewelryWishlist({ navigation }) {
         await axios.delete(`${API_BASE}/wishlist/${id}`, config);
       }
       setWishlist((prev) => prev.filter((i) => !selectedIds.has(i.id)));
+      reloadWishlist(); 
       setSelectedIds(new Set());
       setSelectMode(false);
     } catch {
@@ -170,6 +171,7 @@ export default function JewelryWishlist({ navigation }) {
 
       // ✅ Remove from wishlist after successful add
       setWishlist((prev) => prev.filter((i) => i.id !== item.id));
+      reloadWishlist();
     } catch (error) {
       console.error("Error moving to cart:", error);
       Alert.alert("Error", "Failed to add item to cart. Please try again.");
@@ -278,6 +280,7 @@ export default function JewelryWishlist({ navigation }) {
                   setWishlist((prev) =>
                     prev.filter((i) => i.id !== item.id)
                   );
+                      reloadWishlist();   
                 } catch {
                   Alert.alert("Error", "Unable to remove item");
                 }
