@@ -88,7 +88,7 @@ const handleLogout = () => {
     { key: 'Orders', label: 'My Orders', icon: 'bag-outline', screen: 'Orders' },
     { key: 'Cart', label: 'Cart', icon: 'cart-outline', screen: 'Cart' },
     { key: 'Wishlist', label: 'My Wishlist', icon: 'heart-outline', screen: 'Wishlist' },
-    { key: 'Notifications', label: 'Notifications', icon: 'notifications-outline', screen: 'Notifications' },
+    // { key: 'Notifications', label: 'Notifications', icon: 'notifications-outline', screen: 'Notifications' },
     { key: 'divider2', type: 'divider' },
     { key: 'Exchange', label: 'Gold Exchange / Buyback', icon: 'swap-horizontal-outline', screen: 'Exchange' },
     { key: 'StoreVisit', label: 'Book Store Visit', icon: 'storefront-outline', screen: 'StoreVisit' },
