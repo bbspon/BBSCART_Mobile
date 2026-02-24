@@ -498,9 +498,9 @@ const ProfileSettingsScreen = () => {
         {/* Security */}
         <Text style={styles.sectionTitle}>Security</Text>
         <View style={styles.section}>
-          <TouchableOpacity onPress={handleChangePassword}>
+          {/* <TouchableOpacity onPress={handleChangePassword}>
             <Text style={styles.actionText}>Change Password</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity onPress={handleBiometricLogin}>
             <Text style={styles.actionText}>Setup Biometric Login</Text>
           </TouchableOpacity>
@@ -509,9 +509,9 @@ const ProfileSettingsScreen = () => {
         {/* Support */}
         <Text style={styles.sectionTitle}>Support</Text>
         <View style={styles.section}>
-          <TouchableOpacity onPress={handleSupport}>
+          {/* <TouchableOpacity onPress={handleSupport}>
             <Text style={styles.actionText}>Help & FAQ</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity onPress={() => handleNavigate('ContactUs')}>
             <Text style={styles.actionText}>Contact Support</Text>
           </TouchableOpacity>

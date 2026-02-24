@@ -18,7 +18,8 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import * as ImagePicker from "react-native-image-picker";
 import Icon from "react-native-vector-icons/Ionicons";
 import { showMessage } from "react-native-flash-message";
-
+import Geolocation from "@react-native-community/geolocation";
+import { PermissionsAndroid } from "react-native";
 const API_URL = "https://bbscart.com";
 
 // Real API functions - integrated from web form
@@ -670,29 +671,53 @@ export default function FranchiseHeadForm({ value, onChange, navigation: propNav
     });
   };
 
-  const fetchLocation = () => {
-    // Note: For React Native, you need to install and use @react-native-community/geolocation
-    // For now, showing an alert to manually enter coordinates
-    Alert.alert(
-      "Location",
-      "Please enter latitude and longitude manually, or install @react-native-community/geolocation for automatic location detection.",
-      [{ text: "OK" }]
+const fetchLocation = async () => {
+  try {
+    if (Platform.OS === "android") {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+      );
+
+      if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+        Alert.alert("Permission Denied", "Location permission is required");
+        return;
+      }
+    }
+
+    Geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+
+        setOutlet((prev) => ({
+          ...prev,
+          lat: String(latitude),
+          lng: String(longitude),
+        }));
+
+        showMessage({
+          type: "success",
+          message: "Location fetched successfully",
+        });
+      },
+      (error) => {
+        console.log("Location error:", error);
+
+        Alert.alert(
+          "Location Error",
+          "Unable to fetch location. Please enable GPS."
+        );
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 15000,
+        maximumAge: 10000,
+      }
     );
-    // Uncomment below when geolocation is installed:
-    // import Geolocation from '@react-native-community/geolocation';
-    // Geolocation.getCurrentPosition(
-    //   (position) => {
-    //     const { latitude, longitude } = position.coords;
-    //     setOutlet((prev) => ({ ...prev, lat: String(latitude), lng: String(longitude) }));
-    //     Alert.alert("Location Fetched", `Latitude: ${latitude}, Longitude: ${longitude}`);
-    //   },
-    //   (error) => {
-    //     console.error("Error fetching location:", error);
-    //     Alert.alert("Error", "Failed to fetch location. Please enable location services.");
-    //   },
-    //   { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-    // );
-  };
+  } catch (err) {
+    console.log("fetchLocation crash:", err);
+  }
+};
+
 
   // ============ NEW: final submit helper ============
   const submitFranchiseApplication = async () => {

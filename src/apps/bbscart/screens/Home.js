@@ -327,6 +327,9 @@ export default function HomeScreen({ navigation: propNavigation }) {
   const [showDeliverTo, setShowDeliverTo] = useState(false);
   const [recommendedProducts, setRecommendedProducts] = useState([]);
   const [allProducts, setAllProducts] = useState([]);
+  const [dealsProducts, setDealsProducts] = useState([]);
+const [dealsLoading, setDealsLoading] = useState(false);
+
   const [showSearchModal, setShowSearchModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -675,11 +678,56 @@ useEffect(() => {
       }
     };
   }, []);
+const fetchDealsProducts = useCallback(async () => {
+  try {
+    setDealsLoading(true);
+
+    const pincode = await AsyncStorage.getItem("deliveryPincode");
+
+    if (!pincode) {
+      setDealsProducts([]);
+      setDealsLoading(false);
+      return;
+    }
+
+    const res = await axios.get(`${API_BASE}/products/public`, {
+      params: {
+        pincode,
+        limit: 10,
+        sortBy: "discount",   // backend may ignore, safe
+      },
+    });
+
+    const list = res.data?.products || res.data?.items || [];
+
+    // Pick few random products for deals feel
+    const shuffled = [...list].sort(() => 0.5 - Math.random());
+
+    const mapped = shuffled
+      .slice(0, 10)
+      .map(mapProductToCard)
+      .map((p) => ({
+        ...p,
+        discountPct: p.mrp
+          ? Math.round(((p.mrp - p.price) / p.mrp) * 100)
+          : null,
+      }));
+
+    setDealsProducts(mapped);
+
+  } catch (err) {
+    console.log("❌ DEALS FETCH ERROR", err?.response?.data || err.message);
+    setDealsProducts([]);
+  } finally {
+    setDealsLoading(false);
+  }
+}, []);
 
   // Fetch recommended products on mount
   useEffect(() => {
     fetchRecommendedProducts();
     fetchAllProducts();
+    fetchDealsProducts();
   }, [fetchRecommendedProducts, fetchAllProducts]);
 
   const renderHorizontal = (data, renderCard) => (
@@ -762,7 +810,25 @@ useEffect(() => {
             onPress={(c) => navigate('Products', { name: c.name })}
           />
           <Section title={`Deals of the Day  ⏱  ${countdown}`} rightLabel="View all" onRightPress={() => navigate('Products')}>
-            {renderHorizontal(PRODUCTS_DEALS, (p) => <DealsCard key={p.id} item={p} onPress={onProductPress} />)}
+{dealsLoading ? (
+  <View style={styles.emptyRecommended}>
+    <ActivityIndicator size="small" color="#EAB308" />
+  </View>
+) : dealsProducts.length > 0 ? (
+  renderHorizontal(dealsProducts, (p) => (
+    <DealsCard
+      key={p._id || p.id}
+      item={p}
+      onPress={onProductPress}
+    />
+  ))
+) : (
+  <View style={styles.emptyRecommended}>
+    <Text style={styles.emptyText}>
+      No deals available
+    </Text>
+  </View>
+)}
           </Section>
           <Section 
             title="All Products" 
