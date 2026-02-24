@@ -436,8 +436,22 @@ const { wishlistCount } = useWishlist();
     if (type === 'Category') navigate('Category', { name });
   };
 
-  const onProductPress = (item) => navigate('ProductDetails', { id: item.id });
+const onProductPress = (item) =>
+  navigate('ProductDetails', {
+    id: item.id,
+    product: {
+      ...item,
 
+      // ✅ CRITICAL: lock listing price
+      listingPrice: item.price,
+      price: item.price,
+      mrp: item.mrp,
+
+      name: item.title,
+      image: item.image,
+      category: item.purity?.toLowerCase?.() || 'gold',
+    },
+  });
   const renderHorizontal = (data, renderCard) => (
     <FlatList
       data={data}

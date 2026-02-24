@@ -260,7 +260,7 @@ const normalizeProduct = (raw) => {
   const name = pickFirst(p.name, p.title, p.productName);
   const description = pickFirst(p.description, p.desc, p.shortDesc, p.longDesc);
 
-  const price = pickFirst(p.finalPrice, p.price, p.sellingPrice, p.salePrice, p.offerPrice);
+  const price = pickFirst(p.price, p.sellingPrice, p.salePrice, p.offerPrice,p.finalPrice, );
   const mrp = pickFirst(p.strikePrice, p.mrp, p.mrpPrice, p.originalPrice, p.actualPrice);
 
   const metal = pickFirst(p.metal, p.metalType, p.metal_name, p.metalName, p.category);
@@ -274,14 +274,25 @@ const normalizeProduct = (raw) => {
 
   const images = normalizeImages(p);
   const fallbackImage = pickFirst(p.image, p.product_img, p.productImg);
+const parsedPrice = toNumber(price);
+const parsedMrp = toNumber(mrp);
 
-  const normalized = {
-    id: id ? String(id) : String(mockProduct.id),
-    name: name || mockProduct.name,
-    brand: pickFirst(p.brand, p.vendorName, p.vendor) || mockProduct.brand,
-    price: toNumber(price || 0),
-    mrp: toNumber(mrp || 0),
-    description: description || mockProduct.description,
+const normalized = {
+  id: id ? String(id) : String(mockProduct.id),
+  name: name || mockProduct.name,
+  brand: pickFirst(p.brand, p.vendorName, p.vendor) || mockProduct.brand,
+
+  price:
+    parsedPrice > 0 && parsedPrice < 10000000
+      ? parsedPrice
+      : toNumber(p.listingPrice || mockProduct.price),
+
+  mrp:
+    parsedMrp >= parsedPrice
+      ? parsedMrp
+      : parsedPrice,
+
+  description: description || mockProduct.description,
 
     images: images.length ? images : (fallbackImage ? [fallbackImage] : mockProduct.images),
     image: fallbackImage || (images[0] || mockProduct.images[0]),

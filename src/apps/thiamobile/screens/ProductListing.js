@@ -113,7 +113,7 @@ const ProductListings = () => {
             const rawProducts = Array.isArray(result)
                 ? result
                 : result.items || result.data || [];
-            
+
             // ✅ Debug: Log first product to see image structure
             if (rawProducts.length > 0) {
                 console.log('📦 Sample product from API:', {
@@ -130,7 +130,7 @@ const ProductListings = () => {
             let mappedProducts = rawProducts.map((p) => {
                 // ✅ Extract image from multiple possible sources
                 let imageSource = null;
-                
+
                 // Try images array first
                 if (p.images && Array.isArray(p.images) && p.images.length > 0) {
                     const firstImage = p.images[0];
@@ -141,15 +141,15 @@ const ProductListings = () => {
                         imageSource = firstImage.url || firstImage.src || firstImage.image || firstImage.uri;
                     }
                 }
-                
+
                 // Fallback to single image field
                 if (!imageSource) {
                     imageSource = p.image || p.product_img || p.productImg || p.product_image || p.mainImage;
                 }
-                
+
                 // Build final image URL
                 const finalImage = imageSource ? buildImageUrl(imageSource) : 'https://via.placeholder.com/150';
-                
+
                 return {
                     id: p._id,
                     _id: p._id, // Keep _id for navigation
@@ -200,30 +200,33 @@ const ProductListings = () => {
 
     const handleAddToCart = (product) => {
         try {
-            // ✅ Prepare product object with all required fields for CartContext
+            const selectedQty = productQuantities[product.id] || 1;
+
             const cartProduct = {
                 id: product.id || product._id,
                 name: product.name,
-                category: (product.category || 'gold').toLowerCase(), // Ensure lowercase
+                category: (product.category || 'gold').toLowerCase(),
                 price: product.priceOptions?.[0]?.price || product.price || 0,
                 image: product.image,
                 images: product.images || [],
-                quantity: productQuantities[product.id] || 1,
-                // Include other useful fields
+                quantity: selectedQty,
                 mrp: product.mrp || product.priceOptions?.[0]?.price || 0,
             };
 
             addToCart(cartProduct);
-            
-            // ✅ Show success feedback
+            setProductQuantities(prev => ({
+                ...prev,
+                [product.id]: 1
+            }));
             Alert.alert(
                 'Added to Cart',
-                `${product.name} has been added to your cart.`,
+                `${product.name}\nQuantity: ${selectedQty}`,
                 [{ text: 'OK' }]
             );
+
         } catch (error) {
             console.error('Error adding to cart:', error);
-            Alert.alert('Error', 'Failed to add item to cart. Please try again.');
+            Alert.alert('Error', 'Failed to add item to cart.');
         }
     };
 
@@ -290,7 +293,7 @@ const ProductListings = () => {
                     </View>
 
                     <View style={styles.actionIcons}>
-                        <TouchableOpacity 
+                        <TouchableOpacity
                             onPress={() => handleToggleWishlist(item.id)}
                             style={styles.wishlistButton}
                         >
@@ -309,7 +312,7 @@ const ProductListings = () => {
                             <Text style={styles.addToCartText}>Add to Cart</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity 
+                        <TouchableOpacity
                             onPress={() => handleViewProduct(item)}
                             style={styles.viewButton}
                         >
@@ -418,9 +421,9 @@ const styles = StyleSheet.create({
         margin: 10,
         borderRadius: 8,
     },
-    productImage: { 
-        width: 90, 
-        height: 90, 
+    productImage: {
+        width: 90,
+        height: 90,
         borderRadius: 8,
         backgroundColor: '#f5f5f5', // Background color for placeholder
     },
@@ -454,7 +457,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         marginHorizontal: 8,
     },
-    addToCartText: { 
+    addToCartText: {
         fontWeight: 'bold',
         color: '#333',
         fontSize: 14,

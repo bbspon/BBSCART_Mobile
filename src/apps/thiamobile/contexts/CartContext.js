@@ -86,74 +86,100 @@ export const CartProvider = ({ children }) => {
   // -----------------------------
   // ADD TO CART
   // -----------------------------
-  const addToCart = (product) => {
-    const category = (product.category || '').toLowerCase();
+const addToCart = (product) => {
+  const category = (product.category || '').toLowerCase();
 
-    const updater = (cart, setCart, key) => {
-      const existing = cart.find((i) => i.id === product.id);
+  const updater = (setCart, key) => {
+    setCart((prevCart) => {
+      const existing = prevCart.find((i) => i.id === product.id);
 
       let updated;
+
       if (existing) {
-        updated = cart.map((i) =>
+        // ✅ Increase by incoming quantity OR +1
+        updated = prevCart.map((i) =>
           i.id === product.id
-            ? { ...i, quantity: (i.quantity || 1) + 1 }
+            ? { 
+                ...i, 
+                quantity: (i.quantity || 1) + (product.quantity || 1) 
+              }
             : i
         );
+
+        console.log('✅ Qty merged for:', product.name);
       } else {
-        updated = [...cart, { ...product, quantity: 1 }];
+        // ✅ USE PRODUCT QUANTITY (THIS WAS THE BUG)
+        updated = [
+          ...prevCart,
+          { ...product, quantity: product.quantity || 1 }
+        ];
+
+        console.log('✅ New product added with qty:', product.quantity);
       }
 
-      setCart(updated);
       saveCart(key, updated);
-    };
-
-    if (category === 'gold') updater(goldCart, setGoldCart, STORAGE_KEYS.gold);
-    else if (category === 'silver') updater(silverCart, setSilverCart, STORAGE_KEYS.silver);
-    else if (category === 'diamond') updater(diamondCart, setDiamondCart, STORAGE_KEYS.diamond);
-    else if (category === 'platinum') updater(platinumCart, setPlatinumCart, STORAGE_KEYS.platinum);
-    else console.log('❌ Unknown category:', product.category);
+      return updated;
+    });
   };
+
+  if (category === 'gold') updater(setGoldCart, STORAGE_KEYS.gold);
+  else if (category === 'silver') updater(setSilverCart, STORAGE_KEYS.silver);
+  else if (category === 'diamond') updater(setDiamondCart, STORAGE_KEYS.diamond);
+  else if (category === 'platinum') updater(setPlatinumCart, STORAGE_KEYS.platinum);
+  else console.log('❌ Unknown category:', product.category);
+};
 
   // -----------------------------
   // UPDATE QUANTITY
   // -----------------------------
-  const updateQuantity = (id, category, quantity) => {
-    if (quantity < 1) return;
+const updateQuantity = (id, category, quantity) => {
+  if (quantity < 1) return;
 
-    const updater = (cart, setCart, key) => {
-      const updated = cart.map((i) =>
-        i.id === id ? { ...i, quantity } : i
+  const updater = (setCart, key) => {
+    setCart((prevCart) => {
+
+      const updated = prevCart.map((i) =>
+        String(i.id) === String(id)
+          ? { ...i, quantity }
+          : i
       );
-      setCart(updated);
+
       saveCart(key, updated);
-    };
-
-    category = category.toLowerCase();
-
-    if (category === 'gold') updater(goldCart, setGoldCart, STORAGE_KEYS.gold);
-    if (category === 'silver') updater(silverCart, setSilverCart, STORAGE_KEYS.silver);
-    if (category === 'diamond') updater(diamondCart, setDiamondCart, STORAGE_KEYS.diamond);
-    if (category === 'platinum') updater(platinumCart, setPlatinumCart, STORAGE_KEYS.platinum);
+      return updated;
+    });
   };
+
+  category = category.toLowerCase();
+
+  if (category === 'gold') updater(setGoldCart, STORAGE_KEYS.gold);
+  if (category === 'silver') updater(setSilverCart, STORAGE_KEYS.silver);
+  if (category === 'diamond') updater(setDiamondCart, STORAGE_KEYS.diamond);
+  if (category === 'platinum') updater(setPlatinumCart, STORAGE_KEYS.platinum);
+};
 
   // -----------------------------
   // REMOVE FROM CART
   // -----------------------------
-  const removeFromCart = (id, category) => {
-    const remover = (cart, setCart, key) => {
-      const updated = cart.filter((i) => i.id !== id);
-      setCart(updated);
+const removeFromCart = (id, category) => {
+  const remover = (setCart, key) => {
+    setCart((prevCart) => {
+
+      const updated = prevCart.filter(
+        (i) => String(i.id) !== String(id)
+      );
+
       saveCart(key, updated);
-    };
-
-    category = category.toLowerCase();
-
-    if (category === 'gold') remover(goldCart, setGoldCart, STORAGE_KEYS.gold);
-    if (category === 'silver') remover(silverCart, setSilverCart, STORAGE_KEYS.silver);
-    if (category === 'diamond') remover(diamondCart, setDiamondCart, STORAGE_KEYS.diamond);
-    if (category === 'platinum') remover(platinumCart, setPlatinumCart, STORAGE_KEYS.platinum);
+      return updated;
+    });
   };
 
+  category = category.toLowerCase();
+
+  if (category === 'gold') remover(setGoldCart, STORAGE_KEYS.gold);
+  if (category === 'silver') remover(setSilverCart, STORAGE_KEYS.silver);
+  if (category === 'diamond') remover(setDiamondCart, STORAGE_KEYS.diamond);
+  if (category === 'platinum') remover(setPlatinumCart, STORAGE_KEYS.platinum);
+};
   // -----------------------------
   // CLEAR ALL CARTS
   // -----------------------------
