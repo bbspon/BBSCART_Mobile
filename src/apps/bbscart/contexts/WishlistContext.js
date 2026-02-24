@@ -40,7 +40,7 @@ export function WishlistProvider({ children }) {
       }
 
       const res = await axios.get(`${API_BASE}/wishlist`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${token.token || token}` },
       });
 
       setItems(res.data?.items || res.data || []);

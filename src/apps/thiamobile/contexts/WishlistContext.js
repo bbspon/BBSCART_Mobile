@@ -9,7 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
     getWishlist,
     toggleWishlist as toggleWishlistAPI,
-} from '../services/wishlistAPI';
+} from '../contexts/wishlistAPI';
 
 const WishlistContext = createContext();
 
@@ -22,8 +22,8 @@ export const WishlistProvider = ({ children }) => {
     const loadWishlist = useCallback(async () => {
         try {
             // ✅ Check for token (try both THIAWORLD_TOKEN and bbsUser)
-            const token = await AsyncStorage.getItem('THIAWORLD_TOKEN');
-            const bbsUserRaw = await AsyncStorage.getItem('bbsUser');
+            const token = await AsyncStorage.getItem('UNIFIED_AUTH');
+            const bbsUserRaw = await AsyncStorage.getItem('auth_user');
             const hasToken = token || (bbsUserRaw && JSON.parse(bbsUserRaw)?.token);
 
             if (!hasToken) {
