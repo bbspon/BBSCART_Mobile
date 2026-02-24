@@ -26,12 +26,14 @@ import axios from 'axios';
 import { useWishlist } from '../contexts/WishlistContext';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useTheme } from '../contexts/ThemeContext';
-
+import BBSCARTLogo from '../assets/bbscart-logo.png';
+import HealthcareLogo from '../assets/bbs-health.png';
 // ✅ Removed unused navigator declarations
 // const Drawer = createDrawerNavigator();
 // const Stack = createNativeStackNavigator();
-
+import { useNavigation } from '@react-navigation/native';
 const { width } = Dimensions.get('window');
+import { navigate as navigateToRoot } from '../../../shared/services/navigationService';
 
 // ------------------------------
 // Mock Data (Jewellery Shop Model)
@@ -102,62 +104,92 @@ const useMidnightCountdown = () => {
 // ------------------------------
 // Header with Drawer Button
 // ------------------------------
-const Header = ({ navigation, cartCount, wishlistCount, onSearchPress, onCartPress, onWishlistPress }) => {
+const Header = ({ cartCount, wishlistCount, onSearchPress, onCartPress, onWishlistPress }) => {
   const { colors } = useTheme();
+  const navigation = useNavigation(); 
+const handleNavigateToBBSCART = () => {
+    try {
+      console.log('Navigating to GlobalHealth...');
+      navigateToRoot('BBSCART');
+      console.log('✅ Navigation to GlobalHealth triggered');
+    } catch (error) {
+      console.error('❌ Error navigating to GlobalHealth:', error);
+      Alert.alert('Navigation Error', 'Could not navigate to Global Health. Please try again.');
+    }
+};
 
-  return (
-    <View style={styles.headerContainer}>
-      {/* Logo Row - Top */}
-      <View style={styles.logoRow}>
-        <Image
-          source={ThiaworldLogo}
-          style={styles.logo}
-          resizeMode="contain"
-        />
-      </View>
-
-      {/* Navigation Row - Bottom */}
-      <View style={styles.navRow}>
-        {/* Drawer Menu Button */}
-        <TouchableOpacity
-          style={styles.iconWrapper}
-          onPress={() => navigation?.openDrawer?.()}
-        >
-          <Icon name="menu" size={24} color={colors.text} />
-        </TouchableOpacity>
-
-        {/* Search Bar */}
-        <TouchableOpacity
-          style={styles.searchBar}
-          onPress={onSearchPress}
-          activeOpacity={0.8}
-        >
-          <Icon name="search" size={16} color="#888" style={styles.searchIcon} />
-          <Text style={styles.searchPlaceholder}>Search for products</Text>
-        </TouchableOpacity>
-
-        {/* Notification Icon */}
-        <TouchableOpacity style={styles.iconWrapper} onPress={onWishlistPress}>
-          <Icon name="heart-outline" size={22} color={colors.text} />
-          {wishlistCount > 0 && (
-            <View style={styles.badge}>
-              <Text style={styles.badgeText}>{wishlistCount}</Text>
-            </View>
-          )}
-        </TouchableOpacity>
-
-        {/* Cart Icon */}
-        <TouchableOpacity style={styles.iconWrapper} onPress={onCartPress}>
-          <Image source={Cart} style={styles.icon} />
-          {cartCount > 0 && (
-            <View style={styles.badge}>
-              <Text style={styles.badgeText}>{cartCount}</Text>
-            </View>
-          )}
-        </TouchableOpacity>
-      </View>
+const handleNavigateToGlobalHealth = () => {
+    try {
+      console.log('Navigating to GlobalHealth...');
+      navigateToRoot('GlobalHealth');
+      console.log('✅ Navigation to GlobalHealth triggered');
+    } catch (error) {
+      console.error('❌ Error navigating to GlobalHealth:', error);
+      Alert.alert('Navigation Error', 'Could not navigate to Global Health. Please try again.');
+    }
+  };
+return (
+  <View style={styles.headerContainer}>
+    
+    {/* 🔶 TOP CENTER THIAWORLD LOGO */}
+    <View style={styles.topLogoRow}>
+      <Image
+        source={ThiaworldLogo}
+        style={styles.topLogo}
+        resizeMode="contain"
+      />
     </View>
-  );
+
+    {/* 🔶 SEARCH + ICON ROW */}
+    <View style={styles.navRow}>
+      <TouchableOpacity
+        style={styles.iconWrapper}
+        onPress={() => navigation?.openDrawer?.()}
+      >
+        <Icon name="menu" size={24} color={colors.text} />
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.searchBar}
+        onPress={onSearchPress}
+        activeOpacity={0.8}
+      >
+        <Icon name="search" size={16} color="#888" style={{ marginRight: 6 }} />
+        <Text style={styles.searchPlaceholder}>Search for products</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.iconWrapper} onPress={onWishlistPress}>
+        <Icon name="heart-outline" size={22} color={colors.text} />
+        {wishlistCount > 0 && (
+          <View style={styles.badge}>
+            <Text style={styles.badgeText}>{wishlistCount}</Text>
+          </View>
+        )}
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.iconWrapper} onPress={onCartPress}>
+        <Image source={Cart} style={styles.icon} />
+        {cartCount > 0 && (
+          <View style={styles.badge}>
+            <Text style={styles.badgeText}>{cartCount}</Text>
+          </View>
+        )}
+      </TouchableOpacity>
+    </View>
+
+    {/* 🔶 EXTERNAL APP LOGOS (NO EXTRA SPACE) */}
+    <View style={styles.externalAppsRow}>
+      <TouchableOpacity onPress={handleNavigateToBBSCART}>
+        <Image source={BBSCARTLogo} style={styles.externalLogo} resizeMode="contain" />
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={handleNavigateToGlobalHealth}>
+        <Image source={HealthcareLogo} style={styles.externalLogo} resizeMode="contain" />
+      </TouchableOpacity>
+    </View>
+
+  </View>
+);
 };
 
 // ------------------------------
@@ -208,7 +240,6 @@ const HeroCarousel = ({ banners, onBannerPress }) => {
     </View>
   );
 };
-
 // ------------------------------
 // Categories
 // ------------------------------
@@ -509,7 +540,7 @@ const onProductPress = (item) =>
         contentContainerStyle={{ paddingBottom: TRUST_STRIP_HEIGHT + Math.max(12, insets.bottom) + 8 }}
       >
         <Header
-          navigation={navigation}
+          // navigation={navigation}
           cartCount={cartCount}
           wishlistCount={wishlistCount} 
           onSearchPress={() => navigate('Search')}
@@ -558,14 +589,57 @@ const onProductPress = (item) =>
 // ------------------------------
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
-  headerContainer: { backgroundColor: '#fff', elevation: 4 },
-  logoRow: { alignItems: 'center', justifyContent: 'center', paddingVertical: 8, paddingHorizontal: 12 },
-  logo: { width: 280, height: 100 },
-  navRow: { flexDirection: 'row', alignItems: 'center', padding: 8, paddingTop: 4 },
-  searchBar: { flex: 1, flexDirection: 'row', alignItems: 'center', backgroundColor: '#f2f2f2', borderRadius: 20, paddingHorizontal: 12, marginHorizontal: 8, height: 40, justifyContent: 'flex-start' },
+headerContainer: {
+  backgroundColor: '#fff',
+  paddingTop: Platform.OS === 'android' ? 6 : 0,
+  paddingBottom: 6,
+  borderBottomWidth: 0.5,
+  borderBottomColor: '#ddd',
+  elevation: 6,
+},
+
+/* 🔶 Top Thiaworld Logo */
+topLogoRow: {
+  alignItems: 'center',
+  justifyContent: 'center',
+  paddingVertical: 4,
+},
+topLogo: {
+  width: 240,      // ⬅️ Increased size
+  height: 70,
+},
+
+logoRow: {
+flexDirection: 'row',
+alignItems: 'center',
+justifyContent: 'space-between',
+paddingHorizontal: 16,
+paddingTop: Platform.OS === 'android' ? 10 : 6,
+paddingBottom: 8,
+},  logo: {
+width: 200,
+height: 60,
+alignSelf: 'center',
+},
+navRow: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  paddingHorizontal: 12,
+  marginTop: 4,
+}, searchBar: {
+  flex: 1,
+  flexDirection: 'row',
+  alignItems: 'center',
+  backgroundColor: '#f2f2f2',
+  borderRadius: 22,
+  height: 40,
+  paddingHorizontal: 14,
+  marginHorizontal: 8,
+},
+
   searchIcon: { marginRight: 6 },
   searchPlaceholder: { color: '#888' },
-  iconWrapper: { marginHorizontal: 4 },
+  iconWrapper: { marginHorizontal: 6 },
   icon: { width: 22, height: 22, resizeMode: 'contain' },
   badge: { position: 'absolute', top: -3, right: -6, backgroundColor: 'red', borderRadius: 8, paddingHorizontal: 4 },
   badgeText: { color: '#fff', fontSize: 10 },
@@ -608,4 +682,20 @@ const styles = StyleSheet.create({
   errorText: { fontSize: 16, color: 'red' },
   retryBtn: { marginTop: 12, backgroundColor: 'tomato', paddingHorizontal: 16, paddingVertical: 8, borderRadius: 6 },
   retryTxt: { color: '#fff', fontWeight: 'bold' },
+crossLogo: {
+width: 95,
+height: 42,
+},
+externalAppsRow: {
+  flexDirection: 'row',
+  justifyContent: 'center',   // center aligned
+  alignItems: 'center',
+  marginTop: 6,
+  gap: 10,                    // less space between logos
+},
+
+externalLogo: {
+  width: 180,
+  height: 80,
+},
 });

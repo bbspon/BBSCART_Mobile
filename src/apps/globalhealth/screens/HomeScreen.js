@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { navigate as navigateToRoot } from '../../../shared/services/navigationService';
 import {
   Card,
   Button,
@@ -24,6 +25,8 @@ import {
 import { useAppTheme } from '../../../shared/contexts/ThemeContext';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import BBSCARTLogo from '../assets/images/bbscart-logo.png';
+import ThiaworldLogo from '../assets/images/thiaworld.png';
 
 // Safe width calculation with fallback - calculate on each call to ensure fresh value
 const getWindowWidth = () => {
@@ -131,7 +134,26 @@ const HomeDashboardScreen = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [alertCount, setAlertCount] = useState(3); // replace with API later
   const [showLocationModal, setShowLocationModal] = useState(false);
+// 🔗 External App Navigation
+const handleNavigateToBBSCART = () => {
+  try {
+    console.log('Navigating to BBSCART...');
+    navigateToRoot('BBSCART');
+  } catch (error) {
+    console.error('Navigation error:', error);
+    Alert.alert('Navigation Error', 'Could not open BBSCART');
+  }
+};
 
+const handleNavigateToThiaworld = () => {
+  try {
+    console.log('Navigating to Thiaworld...');
+    navigateToRoot('ThiaMobile');
+  } catch (error) {
+    console.error('Navigation error:', error);
+    Alert.alert('Navigation Error', 'Could not open Thiaworld');
+  }
+};
   const COUNTRIES = ["India"];
 
   const CITY_MAP = {
@@ -346,14 +368,33 @@ const handleCityChange = async (city) => {
         showsVerticalScrollIndicator={false}
       >
         {/* Header */}
-        <View style={styles.header}>
-          <Text style={styles.brand}>BBS Global Health Access</Text>
-          <Text style={styles.title}>Welcome</Text>
+     {/* Header */}
+<View style={styles.header}>
+  <Text style={styles.brand}>BBS Global Health Access</Text>
+  <Text style={styles.title}>Welcome</Text>
+  <Text style={styles.subtitle}>
+    Futuristic Health Access Dashboard
+  </Text>
 
-          <Text style={styles.subtitle}>
-            Futuristic Health Access Dashboard
-          </Text>
-        </View>
+  {/* 🔶 External Apps Row */}
+  <View style={styles.externalAppsRow}>
+    <TouchableOpacity onPress={handleNavigateToBBSCART}>
+      <Image
+        source={BBSCARTLogo}
+        style={styles.externalLogo}
+        resizeMode="contain"
+      />
+    </TouchableOpacity>
+
+    <TouchableOpacity onPress={handleNavigateToThiaworld}>
+      <Image
+        source={ThiaworldLogo}
+        style={styles.externalLogo}
+        resizeMode="contain"
+      />
+    </TouchableOpacity>
+  </View>
+</View>
 
         {/* Auto Image Slider */}
         <ScrollView
@@ -1193,6 +1234,18 @@ const styles = StyleSheet.create({
   rightArrow: {
     right: 4,
   },
+  externalAppsRow: {
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginTop: 12,
+  gap: 12,
+},
+
+externalLogo: {
+  width: 120,
+  height: 50,
+},
 
 });
 
