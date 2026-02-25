@@ -674,7 +674,7 @@ const handleCityChange = async (city) => {
               >
                 Notifications
               </Button>
-
+{/* 
               <Button
                 mode="outlined"
                 icon="map-marker"
@@ -683,9 +683,9 @@ const handleCityChange = async (city) => {
                 onPress={() => navigation.navigate('UAEInsuranceIntegration')}
               >
                 UAE Insurance
-              </Button>
+              </Button> */}
 
-              <Button
+              {/* <Button
                 mode="outlined"
                 icon="calendar-check"
                 textColor="white"
@@ -693,7 +693,7 @@ const handleCityChange = async (city) => {
                 onPress={() => navigation.navigate('AppointmentOtp')}
               >
                 Appointment
-              </Button>
+              </Button> */}
 
               <Button
                 mode="outlined"

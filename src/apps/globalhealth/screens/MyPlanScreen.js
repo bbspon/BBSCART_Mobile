@@ -24,7 +24,7 @@ export default function MyPlanScreen({ navigation }) {
   // -----------------------------
   const fetchMyPlan = async () => {
     try {
-      const raw = await AsyncStorage.getItem('bbsUser');
+      const raw = await AsyncStorage.getItem('UNIFIED_AUTH');
       const session = raw ? JSON.parse(raw) : null;
       const token = session?.token;
 
@@ -109,7 +109,7 @@ export default function MyPlanScreen({ navigation }) {
       <View style={styles.actions}>
         <TouchableOpacity
           style={styles.btn}
-          onPress={() => navigation.navigate('DigitalHealthCard')}
+          onPress={() => navigation.navigate('DigitalHealth')}
         >
           <Text style={styles.btnText}>View QR</Text>
         </TouchableOpacity>
@@ -123,7 +123,7 @@ export default function MyPlanScreen({ navigation }) {
           <Text style={styles.btnText}>View Prescriptions</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.btn}
           onPress={() =>
             navigation.navigate('HealthCoachDashboard', {
@@ -132,7 +132,7 @@ export default function MyPlanScreen({ navigation }) {
           }
         >
           <Text style={styles.btnText}>Health Coach Dashboard</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </ScrollView>
   );

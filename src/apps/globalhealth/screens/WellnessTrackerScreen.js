@@ -29,7 +29,7 @@ const WellnessTrackerScreen = () => {
   const toArray = data => (Array.isArray(data) ? data : data?.logs || []);
 
   const getToken = async () => {
-    const raw = await AsyncStorage.getItem('bbsUser');
+    const raw = await AsyncStorage.getItem('UNIFIED_AUTH');
     return raw ? JSON.parse(raw)?.token : null;
   };
 

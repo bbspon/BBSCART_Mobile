@@ -45,7 +45,7 @@ const PlanUsageScreen = () => {
   useEffect(() => {
     const fetchUsage = async () => {
       try {
-        const raw = await AsyncStorage.getItem('bbsUser');
+        const raw = await AsyncStorage.getItem('UNIFIED_AUTH');
         const session = raw ? JSON.parse(raw) : null;
         const token = session?.token;
 

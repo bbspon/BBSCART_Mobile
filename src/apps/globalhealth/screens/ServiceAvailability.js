@@ -24,7 +24,7 @@ const ServiceAvailability = ({ userRole = 'staff' }) => {
 
   const fetchServices = async () => {
     try {
-      const raw = await AsyncStorage.getItem('bbsUser');
+      const raw = await AsyncStorage.getItem('UNIFIED_AUTH');
       const token = raw ? JSON.parse(raw).token : null;
 
       const res = await axios.get(`${API_BASE_URL}/service-availability`, {

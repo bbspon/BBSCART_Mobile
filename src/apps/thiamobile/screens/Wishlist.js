@@ -42,7 +42,7 @@ const { reloadWishlist } = useWishlist();
 
   const getAuthConfig = async () => {
     // ✅ Try THIAWORLD_TOKEN first (current app standard)
-    let token = await AsyncStorage.getItem("THIAWORLD_TOKEN");
+    let token = await AsyncStorage.getItem("UNIFIED_AUTH");
     
     // ✅ Fallback to bbsUser token (legacy support)
     if (!token) {

@@ -32,7 +32,7 @@ const PaymentsWalletPage = () => {
   // -----------------------------
   const fetchWalletBalance = async () => {
     try {
-      const raw = await AsyncStorage.getItem('bbsUser');
+      const raw = await AsyncStorage.getItem('UNIFIED_AUTH');
       const token = JSON.parse(raw)?.token;
 
       const res = await axios.get(`${API_BASE_URL}/wallet`, {
@@ -75,7 +75,7 @@ const PaymentsWalletPage = () => {
 
     try {
       setLoading(true);
-      const raw = await AsyncStorage.getItem('bbsUser');
+      const raw = await AsyncStorage.getItem('UNIFIED_AUTH');
       const token = JSON.parse(raw)?.token;
 
       await axios.post(
@@ -113,7 +113,7 @@ const PaymentsWalletPage = () => {
 
     try {
       setLoading(true);
-      const raw = await AsyncStorage.getItem('bbsUser');
+      const raw = await AsyncStorage.getItem('UNIFIED_AUTH');
       const token = JSON.parse(raw)?.token;
 
       const initiateRes = await axios.post(

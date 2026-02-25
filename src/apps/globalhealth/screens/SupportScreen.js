@@ -32,7 +32,7 @@ const SupportPage = () => {
       setSubmitting(true);
 
       // Token is optional, but added for consistency
-      const raw = await AsyncStorage.getItem('bbsUser');
+      const raw = await AsyncStorage.getItem('UNIFIED_AUTH');
       const token = raw ? JSON.parse(raw).token : null;
 
       await axios.post(

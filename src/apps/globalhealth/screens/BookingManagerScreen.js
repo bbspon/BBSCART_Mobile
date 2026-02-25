@@ -95,21 +95,32 @@ const BookingManagerScreen = () => {
       <Text style={styles.label}>Date & Time</Text>
       <Button
         title={form.dateTime.toLocaleString()}
-        onPress={() => setShowPicker(true)}
-      />
+onPress={() => {
+  setShowPicker(true);
+}}      />
 
       {showPicker && (
-        <DateTimePicker
-          value={form.dateTime}
-          mode="datetime"
-          display="default"
-          onChange={(e, selectedDate) => {
-            setShowPicker(false);
-            if (selectedDate) {
-              setForm({ ...form, dateTime: selectedDate });
-            }
-          }}
-        />
+      <DateTimePicker
+  value={form.dateTime}
+  mode="datetime"
+  display="default"
+  onChange={(event, selectedDate) => {
+    if (event.type === "dismissed") {
+      setShowPicker(false);
+      return;
+    }
+
+    setShowPicker(false);
+
+    if (selectedDate) {
+      setForm(prev => ({
+        ...prev,
+        dateTime: selectedDate,
+      }));
+    }
+  }}
+  style={{ display: showPicker ? "flex" : "none" }}
+/>
       )}
 
       <Text style={styles.label}>Patient Name</Text>

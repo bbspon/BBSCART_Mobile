@@ -9,7 +9,7 @@ const UnifiedAuthContext = createContext();
 const UNIFIED_AUTH_KEY = 'UNIFIED_AUTH';
 const LEGACY_KEYS = {
   bbscart: 'auth_user',
-  globalhealth: 'bbsUser',
+  globalhealth: 'auth_user',
   thiamobile: { token: 'THIAWORLD_TOKEN', user: 'THIAWORLD_USER' },
 };
 

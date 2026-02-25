@@ -45,7 +45,9 @@ const AIDiseasePredictionRiskEngine = () => {
   };
 
   const getToken = async () => {
-    const raw = await AsyncStorage.getItem('bbsUser');
+    const raw = await AsyncStorage.getItem('UNIFIED_AUTH');
+    console.log('Raw UNIFIED_AUTH:', raw);
+    
     return raw ? JSON.parse(raw)?.token : null;
   };
 
@@ -55,6 +57,7 @@ const AIDiseasePredictionRiskEngine = () => {
   const handleSubmit = async () => {
     try {
       const token = await getToken();
+    console.log("TOKEN BEING SENT →", token);
 
       if (!token) {
         Alert.alert('Auth Error', 'Please login again');
@@ -72,12 +75,14 @@ const AIDiseasePredictionRiskEngine = () => {
           .map(c => c.trim())
           .filter(Boolean),
       };
-
+    console.log("PAYLOAD →", payload);
       const res = await axios.post(`${API_BASE_URL}/ai-risk/predict`, payload, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        
       });
+    console.log("✅ API SUCCESS RESPONSE →", res.data);
 
       setResult(res.data.data);
     } catch (err) {

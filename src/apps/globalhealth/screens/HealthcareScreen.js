@@ -1,4 +1,3 @@
-// HealthCarePage.native.js
 import React, { useState } from "react";
 import {
   View,
@@ -9,6 +8,7 @@ import {
   Modal,
   TextInput,
   StyleSheet,
+  Alert,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -33,8 +33,6 @@ const services = [
     description: "Therapy and mental wellness",
     img: "https://png.pngtree.com/png-vector/20240723/ourmid/pngtree-patient-counseling-with-psychologist-png-image_12953856.png",
     trending: true,
-    width: 100,
-    height: 100,
   },
   {
     id: 4,
@@ -54,6 +52,7 @@ const services = [
 
 export default function HealthCarePage() {
   const insets = useSafeAreaInsets();
+
   const [showChat, setShowChat] = useState(false);
   const [showScheduler, setShowScheduler] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
@@ -66,14 +65,23 @@ export default function HealthCarePage() {
   const handleSchedulerShow = (service) => {
     setSelectedService(service);
     setShowScheduler(true);
+  };
 
-    alert(`Booking scheduled successfully for ${service.name}`);
+  const handleConfirmBooking = () => {
+    setShowScheduler(false);
+
+    Alert.alert(
+      "Appointment Confirmed",
+      `${selectedService?.title} appointment booked successfully.`
+    );
   };
 
   return (
     <ScrollView
       style={styles.container}
-      contentContainerStyle={{ paddingBottom: 24 + Math.max(12, insets.bottom) + 8 }}
+      contentContainerStyle={{
+        paddingBottom: 24 + Math.max(12, insets.bottom) + 8,
+      }}
     >
       {/* Filter Section */}
       <View style={styles.filterSection}>
@@ -87,8 +95,9 @@ export default function HealthCarePage() {
         </TouchableOpacity>
       </View>
 
-      {/* Services Tabs */}
+      {/* Services */}
       <Text style={styles.heading}>Support at Your Doorstep</Text>
+
       {filteredServices.map((service) => (
         <View key={service.id} style={styles.card}>
           {service.trending && (
@@ -96,10 +105,13 @@ export default function HealthCarePage() {
               <Text style={styles.badgeText}>Trending</Text>
             </View>
           )}
+
           <Image source={{ uri: service.img }} style={styles.cardImg} />
+
           <View style={styles.cardBody}>
             <Text style={styles.cardTitle}>{service.title}</Text>
             <Text style={styles.cardText}>{service.description}</Text>
+
             <TouchableOpacity
               style={styles.primaryBtn}
               onPress={() => handleSchedulerShow(service)}
@@ -112,10 +124,14 @@ export default function HealthCarePage() {
 
       {/* Hero Section */}
       <View style={styles.hero}>
-        <Text style={styles.heroTitle}>Your One-Stop Health, Our Priority</Text>
+        <Text style={styles.heroTitle}>
+          Your One-Stop Health, Our Priority
+        </Text>
+
         <Text style={styles.heroText}>
           Book doctors, nurses, therapists, or home care with ease.
         </Text>
+
         <View style={styles.heroBtns}>
           <TouchableOpacity
             style={styles.lightBtn}
@@ -123,18 +139,21 @@ export default function HealthCarePage() {
           >
             <Text style={styles.btnDarkText}>Book a Doctor</Text>
           </TouchableOpacity>
+
           <TouchableOpacity
             style={styles.lightBtn}
             onPress={() => handleSchedulerShow(services[1])}
           >
             <Text style={styles.btnDarkText}>Talk to Nurse</Text>
           </TouchableOpacity>
+
           <TouchableOpacity
             style={styles.dangerBtn}
-            onPress={() => alert("Emergency services routed!")}
+            onPress={() => Alert.alert("Emergency", "Emergency services routed!")}
           >
             <Text style={styles.btnText}>Emergency / SOS</Text>
           </TouchableOpacity>
+
           <TouchableOpacity
             style={styles.infoBtn}
             onPress={() => setShowChat(true)}
@@ -150,10 +169,12 @@ export default function HealthCarePage() {
           <View style={styles.modalBox}>
             <Text style={styles.modalTitle}>Live Chat Support</Text>
             <Text>Hello! How can we assist you today?</Text>
+
             <TextInput
               style={styles.input}
               placeholder="Type your message..."
             />
+
             <TouchableOpacity
               style={styles.primaryBtn}
               onPress={() => setShowChat(false)}
@@ -164,21 +185,31 @@ export default function HealthCarePage() {
         </View>
       </Modal>
 
-      {/* Appointment Scheduler Modal */}
+      {/* Scheduler Modal */}
       <Modal visible={showScheduler} animationType="slide" transparent>
         <View style={styles.modalOverlay}>
           <View style={styles.modalBox}>
             <Text style={styles.modalTitle}>
               Book Appointment: {selectedService?.title}
             </Text>
-            <TextInput style={styles.input} placeholder="Select Date & Time" />
-            <TextInput style={styles.input} placeholder="Patient Name" />
+
+            <TextInput
+              style={styles.input}
+              placeholder="Select Date & Time"
+            />
+
+            <TextInput
+              style={styles.input}
+              placeholder="Patient Name"
+            />
+
             <TouchableOpacity
               style={styles.successBtn}
-              onPress={() => setShowScheduler(false)}
+              onPress={handleConfirmBooking}
             >
               <Text style={styles.btnText}>Confirm Booking</Text>
             </TouchableOpacity>
+
             <TouchableOpacity
               style={styles.lightBtn}
               onPress={() => setShowScheduler(false)}
@@ -194,22 +225,26 @@ export default function HealthCarePage() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#fff" },
+
   filterSection: {
     backgroundColor: "#000",
     padding: 12,
     alignItems: "center",
   },
+
   filterToggle: {
     backgroundColor: "#333",
     padding: 8,
     borderRadius: 8,
   },
+
   heading: {
     fontSize: 18,
     fontWeight: "bold",
     textAlign: "center",
     marginVertical: 20,
   },
+
   card: {
     backgroundColor: "#f8f9fa",
     borderRadius: 12,
@@ -217,6 +252,7 @@ const styles = StyleSheet.create({
     padding: 12,
     elevation: 3,
   },
+
   badge: {
     position: "absolute",
     backgroundColor: "#ffc107",
@@ -227,11 +263,20 @@ const styles = StyleSheet.create({
     right: 8,
     zIndex: 1,
   },
+
   badgeText: { fontSize: 10, fontWeight: "bold" },
-  cardImg: { width: "100%", height: 380, borderRadius: 8, marginBottom: 12 },
-  cardBody: {},
+
+  cardImg: {
+    width: "100%",
+    height: 380,
+    borderRadius: 8,
+    marginBottom: 12,
+  },
+
   cardTitle: { fontSize: 16, fontWeight: "bold" },
+
   cardText: { fontSize: 13, color: "#555", marginVertical: 8 },
+
   primaryBtn: {
     backgroundColor: "#0d6efd",
     padding: 10,
@@ -239,6 +284,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 5,
   },
+
   successBtn: {
     backgroundColor: "green",
     padding: 10,
@@ -246,6 +292,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginVertical: 6,
   },
+
   infoBtn: {
     backgroundColor: "#0dcaf0",
     padding: 10,
@@ -253,6 +300,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     margin: 4,
   },
+
   dangerBtn: {
     backgroundColor: "red",
     padding: 10,
@@ -260,6 +308,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     margin: 4,
   },
+
   lightBtn: {
     backgroundColor: "#e9ecef",
     padding: 10,
@@ -267,8 +316,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     margin: 4,
   },
+
   btnText: { color: "#fff", fontWeight: "600" },
+
   btnDarkText: { color: "#000", fontWeight: "600" },
+
   hero: {
     backgroundColor: "#0dcaf0",
     padding: 20,
@@ -276,21 +328,32 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginVertical: 20,
   },
+
   heroTitle: { fontSize: 18, fontWeight: "bold", color: "#fff" },
+
   heroText: { color: "#fff", marginVertical: 8 },
-  heroBtns: { flexDirection: "row", flexWrap: "wrap", justifyContent: "center" },
+
+  heroBtns: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
+  },
+
   modalOverlay: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.5)",
     justifyContent: "center",
     padding: 20,
   },
+
   modalBox: {
     backgroundColor: "#fff",
     borderRadius: 12,
     padding: 20,
   },
+
   modalTitle: { fontSize: 16, fontWeight: "bold", marginBottom: 10 },
+
   input: {
     borderWidth: 1,
     borderColor: "#ccc",

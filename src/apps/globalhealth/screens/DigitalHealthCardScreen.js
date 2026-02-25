@@ -29,7 +29,7 @@ const DigitalHealthCard = () => {
   // -----------------------------
   const fetchCard = async () => {
     try {
-      const raw = await AsyncStorage.getItem('bbsUser');
+      const raw = await AsyncStorage.getItem('UNIFIED_AUTH');
       const session = raw ? JSON.parse(raw) : null;
       const token = session?.token;
 
@@ -58,7 +58,7 @@ const DigitalHealthCard = () => {
   // -----------------------------
   const handleRefreshQR = async () => {
     try {
-      const raw = await AsyncStorage.getItem('bbsUser');
+      const raw = await AsyncStorage.getItem('UNIFIED_AUTH');
       const session = raw ? JSON.parse(raw) : null;
       const token = session?.token;
 

@@ -65,7 +65,7 @@ const HospitalPartnershipKit = () => {
       setSubmitted(false);
 
       // Get token from AsyncStorage (same as web localStorage)
-      const raw = await AsyncStorage.getItem('bbsUser');
+      const raw = await AsyncStorage.getItem('UNIFIED_AUTH');
       const token = raw ? JSON.parse(raw).token : null;
 
       // Prepare payload matching web format

@@ -106,7 +106,7 @@ export default function UserFeedbackRatingsSystem({ partnerId }) {
     }
 
     try {
-      const raw = await AsyncStorage.getItem('bbsUser');
+      const raw = await AsyncStorage.getItem('UNIFIED_AUTH');
       const token = raw ? JSON.parse(raw)?.token : null;
 
       if (!token) {

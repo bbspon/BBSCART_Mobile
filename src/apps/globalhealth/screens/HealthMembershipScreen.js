@@ -62,7 +62,7 @@ export default function HealthMembershipPage() {
   // ----------------------------------
   const fetchMembership = async () => {
     try {
-      const raw = await AsyncStorage.getItem('bbsUser');
+      const raw = await AsyncStorage.getItem('UNIFIED_AUTH');
       const session = raw ? JSON.parse(raw) : null;
       const token = session?.token;
 
@@ -100,7 +100,7 @@ export default function HealthMembershipPage() {
   // ----------------------------------
   const handleUpgrade = async planName => {
     try {
-      const raw = await AsyncStorage.getItem('bbsUser');
+      const raw = await AsyncStorage.getItem('UNIFIED_AUTH');
       const session = raw ? JSON.parse(raw) : null;
       const token = session?.token;
 
@@ -127,7 +127,7 @@ export default function HealthMembershipPage() {
   // ----------------------------------
   const handleAutoRenew = async () => {
     try {
-      const raw = await AsyncStorage.getItem('bbsUser');
+      const raw = await AsyncStorage.getItem('UNIFIED_AUTH');
       const session = raw ? JSON.parse(raw) : null;
       const token = session?.token;
 

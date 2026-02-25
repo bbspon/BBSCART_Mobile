@@ -56,7 +56,7 @@ export default function HealthInsightsEngine() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const raw = await AsyncStorage.getItem('bbsUser');
+      const raw = await AsyncStorage.getItem('UNIFIED_AUTH');
       const session = raw ? JSON.parse(raw) : null;
       const token = session?.token;
 

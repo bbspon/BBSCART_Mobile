@@ -26,7 +26,7 @@ const PlanPaymentScreen = () => {
   const [message, setMessage] = useState('');
 
   const getToken = async () => {
-    const raw = await AsyncStorage.getItem('bbsUser');
+    const raw = await AsyncStorage.getItem('UNIFIED_AUTH');
     return raw ? JSON.parse(raw)?.token : null;
   };
 

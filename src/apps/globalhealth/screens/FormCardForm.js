@@ -79,7 +79,7 @@ export default function FormCardForm() {
   /* ---------------- SUBMIT ---------------- */
   const handleSubmit = async () => {
     try {
-      const raw = await AsyncStorage.getItem('bbsUser');
+      const raw = await AsyncStorage.getItem('UNIFIED_AUTH');
       const session = raw ? JSON.parse(raw) : null;
       const token = session?.token;
 

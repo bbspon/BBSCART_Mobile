@@ -269,12 +269,12 @@ const handleLogout = () => {
       </ScrollView>
 
       {/* Footer with Logout */}
-      <View style={dynamicStyles.footer}>
+      {/* <View style={dynamicStyles.footer}>
         <TouchableOpacity style={dynamicStyles.logoutButton} onPress={handleLogout}>
           <Icon name="log-out-outline" size={24} color="#fff" />
           <Text style={dynamicStyles.logoutText}>Logout</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
     </View>
   );
 };

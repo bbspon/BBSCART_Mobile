@@ -24,7 +24,7 @@ const PlanEligibilityScreen = ({ navigation }) => {
   const [error, setError] = useState('');
 
   const getToken = async () => {
-    const raw = await AsyncStorage.getItem('bbsUser');
+    const raw = await AsyncStorage.getItem('UNIFIED_AUTH');
     return raw ? JSON.parse(raw)?.token : null;
   };
 

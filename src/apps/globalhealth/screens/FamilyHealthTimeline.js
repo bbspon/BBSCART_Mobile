@@ -41,7 +41,7 @@ export default function FamilyHealthTimeline() {
 
   /* ---------------- AUTH HELPERS ---------------- */
   const getSession = async () => {
-    const raw = await AsyncStorage.getItem('bbsUser');
+    const raw = await AsyncStorage.getItem('UNIFIED_AUTH');
     return raw ? JSON.parse(raw) : null;
   };
 

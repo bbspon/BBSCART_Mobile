@@ -13,20 +13,22 @@ const QRCodeDisplay = () => {
   useEffect(() => {
     const fetchQR = async () => {
       try {
-        const raw = await AsyncStorage.getItem('bbsUser');
+        const raw = await AsyncStorage.getItem('UNIFIED_AUTH');
         const session = raw ? JSON.parse(raw) : null;
         const token = session?.token;
+ console.log("🔑 TOKEN FROM STORAGE →", token);
 
         if (!token) {
           throw new Error('Auth token missing');
         }
+ console.log("📡 CALLING →", `${API_BASE_URL}/user/qr`);
 
         const res = await axios.get(`${API_BASE_URL}/user/qr`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-
+console.log("✅ QR RESPONSE →", res.data);
         setQrUrl(res.data?.qr);
         setPlanInfo(res.data?.info);
       } catch (err) {

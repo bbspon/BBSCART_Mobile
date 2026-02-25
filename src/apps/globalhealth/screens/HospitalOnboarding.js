@@ -70,7 +70,7 @@ export default function HospitalOnboarding() {
       setLoading(true);
 
       // Get token from AsyncStorage (same as web localStorage)
-      const raw = await AsyncStorage.getItem("bbsUser");
+      const raw = await AsyncStorage.getItem("UNIFIED_AUTH");
       const token = raw ? JSON.parse(raw).token : null;
       
       if (!token) {

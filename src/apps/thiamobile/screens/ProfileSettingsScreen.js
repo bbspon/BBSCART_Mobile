@@ -284,7 +284,7 @@ const ProfileSettingsScreen = ({ navigation }) => {
                 }
               );
 
-              await AsyncStorage.removeItem('bbsUser');
+              await AsyncStorage.removeItem('UNIFIED_AUTH');
               navigation.replace('SignIn');
             } catch (err) {
               Alert.alert('Error', 'Failed to delete account');
@@ -503,9 +503,9 @@ const ProfileSettingsScreen = ({ navigation }) => {
         {/* Account Actions */}
         <Text style={dynamicStyles.sectionTitle}>Account Actions</Text>
         <View style={dynamicStyles.section}>
-          <TouchableOpacity onPress={handleLogout}>
+          {/* <TouchableOpacity onPress={handleLogout}>
             <Text style={[dynamicStyles.actionText, { color: colors.error }]}>Logout</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity onPress={handleDeleteAccount}>
             <Text style={[dynamicStyles.actionText, { color: colors.error }]}>Delete Account</Text>
           </TouchableOpacity>

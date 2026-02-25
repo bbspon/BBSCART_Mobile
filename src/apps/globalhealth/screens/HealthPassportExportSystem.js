@@ -37,7 +37,7 @@ export default function HealthPassportExportSystem() {
   useEffect(() => {
     const loadPassport = async () => {
       try {
-        const raw = await AsyncStorage.getItem('bbsUser');
+        const raw = await AsyncStorage.getItem('UNIFIED_AUTH');
         const parsed = raw ? JSON.parse(raw) : null;
         const userId = parsed?.user?.id;
 

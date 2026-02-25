@@ -30,7 +30,7 @@ const HomeVisitBooking = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const raw = await AsyncStorage.getItem('bbsUser');
+        const raw = await AsyncStorage.getItem('UNIFIED_AUTH');
         const parsed = raw ? JSON.parse(raw) : null;
         setUserIdFromStorage(parsed?.user?.id);
       } catch (err) {

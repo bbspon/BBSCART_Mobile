@@ -32,7 +32,7 @@ export default function ComplianceMainPage() {
   const [loading, setLoading] = useState(true);
 
   const getToken = async () => {
-    const raw = await AsyncStorage.getItem('bbsUser');
+    const raw = await AsyncStorage.getItem('UNIFIED_AUTH');
     return raw ? JSON.parse(raw)?.token : null;
   };
 

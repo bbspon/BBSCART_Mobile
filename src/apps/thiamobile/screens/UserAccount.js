@@ -189,9 +189,9 @@ const UserAccount = ({ navigation }) => {
       </View>
 
       {/* Logout */}
-      <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
+      {/* <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
         <Text style={styles.logoutText}>Log Out</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </ScrollView>
   );
 };

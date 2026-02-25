@@ -99,15 +99,15 @@ export default function CheckoutPage({ navigation: propNavigation, route }) {
       setPlacing(true);
 
       // ✅ Get authentication token
-      let token = await AsyncStorage.getItem("THIAWORLD_TOKEN");
+      let token = await AsyncStorage.getItem("UNIFIED_AUTH");
       if (!token) {
-        const raw = await AsyncStorage.getItem("bbsUser");
+        const raw = await AsyncStorage.getItem("UNIFIED_AUTH");
         if (raw) {
           try {
             const parsed = JSON.parse(raw);
             token = parsed?.token;
           } catch (e) {
-            console.log('Error parsing bbsUser:', e);
+            console.log('Error parsing UNIFIED_AUTH:', e);
           }
         }
       }
