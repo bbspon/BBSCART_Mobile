@@ -40,33 +40,28 @@ const { reloadWishlist } = useWishlist();
     };
   }, [navigation]);
 
-  const getAuthConfig = async () => {
-    // ✅ Try THIAWORLD_TOKEN first (current app standard)
-    let token = await AsyncStorage.getItem("UNIFIED_AUTH");
-    
-    // ✅ Fallback to bbsUser token (legacy support)
-    if (!token) {
-      const raw = await AsyncStorage.getItem("bbsUser");
-      if (raw) {
-        try {
-          const parsed = JSON.parse(raw);
-          token = parsed?.token;
-        } catch (e) {
-          console.log('Error parsing bbsUser:', e);
-        }
-      }
-    }
+const getAuthConfig = async () => {
+  try {
+    const raw = await AsyncStorage.getItem("UNIFIED_AUTH");
 
-    if (!token) {
-      return {};
-    }
+    if (!raw) return {};
+
+    const parsed = JSON.parse(raw);
+
+    const token = parsed?.token;
+
+    if (!token) return {};
 
     return {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     };
-  };
+  } catch (e) {
+    console.log("Auth parse error:", e);
+    return {};
+  }
+};
 
   const loadWishlist = async () => {
     try {
